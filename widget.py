@@ -12,7 +12,12 @@ class Widget:
         self.lst_id_pb = []
         self.lst_case_vide = []
 
-        self.lst_id_dame = []
+        self.lst_id_dame_noir = []
+        self.lst_id_dame_blanc = []
+
+        self.pos_dame_noir = []
+        self.pos_dame_blanc = []
+
         self.id_dame = 141
 
         self.create_damier()
@@ -80,14 +85,14 @@ class Widget:
         pos_x, pos_y = x, y
 
         DameNoir(self.can, pos_x, pos_y)
-        self.lst_id_dame.append(self.id_dame)
+        self.lst_id_dame_noir.append(self.id_dame)
         self.lst_pos_dn.append((pos_x, pos_y, pos_x + 60, pos_y + 60))
         self.id_dame += 1
 
     def create_dame_blanche(self, x, y):
         pos_x, pos_y = x, y
         DameBlanche(self.can, pos_x, pos_y)
-        self.lst_id_dame.append(self.id_dame)
+        self.lst_id_dame_blanc.append(self.id_dame)
         self.lst_pos_db.append((pos_x, pos_y, pos_x + 60, pos_y + 60))
         self.id_dame += 1
 

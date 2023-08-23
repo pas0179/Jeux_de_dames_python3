@@ -12,6 +12,8 @@ def ident_pion_noir_blanc(id):
         pion = "blanc"
     elif id > 140:
         pion = "dame"
+    else:
+        pass
 
     return pion
 
