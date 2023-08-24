@@ -5,8 +5,8 @@
 
 """
 
-from depl_simple import Deplacement
-from sauts import Sauts
+from solution_depl_simple import Deplacement
+from solution_depl_saut import Sauts
 
 
 class Move:

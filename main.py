@@ -6,12 +6,12 @@ from fonctions import (
     convert_dict_lst,
     ident_pion_noir_blanc,
 )
-from move import Move
+from solution_depl import Move
 from player import Player
 from widget import Widget
 from sup_pion import SuppPion
 from coord_convert import CoordConvert
-from depl_dame_simple import DeplDames
+from solution_depl_dame_simple import SolDeplDames
 
 
 class App:
@@ -100,7 +100,7 @@ class App:
         color_pion = ident_pion_noir_blanc(id)
 
         print(f"color_pion : {color_pion}")
-        
+
         print(f"coord_release : {coord_release}")
 
         if color_pion == "noir" and (
@@ -231,10 +231,32 @@ class App:
 
             # On récuprère la lise des deplacements possible
             self.dict_depl = {}
-            
-            sol_dame = DeplDames(self.pos_dame_select, self.lst_case_vide)
-            self.dict_depl = sol_dame.dict_depl
-            print(f"self.dict_depl : {self.dict_depl}")
+
+            sol_dame = SolDeplDames(self.pos_dame_select, self.lst_case_vide)
+            self.dict_depl = sol_dame.solution_depl_dame()
+
+            # On convertie le dictionnaire des solutions en liste de tuples
+            self.lst_case_possible = convert_dict_lst(
+                self.dict_depl, self.pos_dame_select
+            )
+
+            # On va jaunir les cases noirs pour voir les solutions
+            self.lst_ids = []
+            if len(self.lst_case_possible) > 0:
+                for val in self.lst_case_possible:
+                    id = self.widget.find_id(val)
+                    self.lst_ids.append(id[0])
+            else:
+                pass
+
+            if len(self.lst_ids) > 0:
+                for el in self.lst_ids:
+                    self.widget.can.itemconfigure(
+                        el,
+                        fill="yellow",
+                    )
+            else:
+                pass
 
             # On regarde a qui le tour
             player = self.player.select_player(
@@ -297,7 +319,7 @@ class App:
 
                         # Restauration des couleurs d'origine
                         # Doit etre desactivé si les cases possibles
-                        # Ne sont plus visible en jaune 
+                        # Ne sont plus visible en jaune
                         self.widget.restor_case_noir(self.lst_ids)
                         # Enregistrement du déplacement dans une liste
                         # 0: pas de saut, 1: saut d'un pion
@@ -386,6 +408,8 @@ class App:
                 and self.pos_dame_select[1] == coord_release[1]
             ):
                 self.widget.restor_pion_ou_dame(self.id, color_dame)
+
+                self.widget.restor_case_noir(self.lst_ids)
 
             else:
                 # La case de destination n'est pas valide
