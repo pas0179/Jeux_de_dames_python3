@@ -43,6 +43,10 @@ class Move:
 
         else:
             sol2 = Deplacement(
-                self.id, self.pos_pion, self.lst_case_vide, self.pos_pn, self.pos_pb
+                self.id,
+                self.pos_pion,
+                self.lst_case_vide,
+                self.pos_pn,
+                self.pos_pb,
             )
             self.dict_solution = sol2.dict_depl

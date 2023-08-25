@@ -3,8 +3,13 @@
     solution de possibilités
 """
 
-from fonctions import (ident_pion_noir_blanc, saut_bas_d, saut_bas_g,
-                       saut_haut_d, saut_haut_g)
+from fonctions import (
+    ident_pion_noir_blanc,
+    saut_bas_d,
+    saut_bas_g,
+    saut_haut_d,
+    saut_haut_g,
+)
 
 
 class Sauts:
@@ -31,7 +36,9 @@ class Sauts:
     liste [ position départ, position d'arrivée]
     """
 
-    def saut_possible(self, id, pos_pion, oldpos, lst_case_vide, pos_pn, pos_pb):
+    def saut_possible(
+        self, id, pos_pion, oldpos, lst_case_vide, pos_pn, pos_pb
+    ):
         dict_saut = {}
         lst_pn_sup = []
         lst_pb_sup = []
@@ -41,10 +48,18 @@ class Sauts:
 
         # On définie les listes pour les pions a supprimer
 
-        saut1, pnsup1, pbsup1 = saut_bas_g(id, pos_pion, lst_case_vide, pos_pn, pos_pb)
-        saut2, pnsup2, pbsup2 = saut_bas_d(id, pos_pion, lst_case_vide, pos_pn, pos_pb)
-        saut3, pnsup3, pbsup3 = saut_haut_d(id, pos_pion, lst_case_vide, pos_pn, pos_pb)
-        saut4, pnsup4, pbsup4 = saut_haut_g(id, pos_pion, lst_case_vide, pos_pn, pos_pb)
+        saut1, pnsup1, pbsup1 = saut_bas_g(
+            id, pos_pion, lst_case_vide, pos_pn, pos_pb
+        )
+        saut2, pnsup2, pbsup2 = saut_bas_d(
+            id, pos_pion, lst_case_vide, pos_pn, pos_pb
+        )
+        saut3, pnsup3, pbsup3 = saut_haut_d(
+            id, pos_pion, lst_case_vide, pos_pn, pos_pb
+        )
+        saut4, pnsup4, pbsup4 = saut_haut_g(
+            id, pos_pion, lst_case_vide, pos_pn, pos_pb
+        )
 
         if len(saut1) > 0 and saut1 != oldpos:
             # print(f"saut1: {saut1}, oldpos: {oldpos}")
@@ -198,7 +213,6 @@ class Sauts:
                 )
 
                 if len(dict_temp) > 0:
-
                     dict_saut.update(dict_temp)
 
                     if len(pn_sup) > 0:
@@ -218,4 +232,3 @@ class Sauts:
                 lst_last_pos = self.find_last_pos_dict(self.dict_saut)
             else:
                 lst_last_pos = []
-

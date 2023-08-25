@@ -4,7 +4,6 @@ from tkinter import messagebox
 from fonctions import (
     convert_coord,
     convert_dict_lst,
-    ident_pion_noir_blanc,
 )
 from solution_depl import Move
 from player import Player
@@ -97,11 +96,7 @@ class App:
     def verif_creation_dame(self, id, coord_release):
         """on vérifie d'abord si le pion noir ou blanc
         est sur la case de création d'une dame"""
-        color_pion = ident_pion_noir_blanc(id)
-
-        print(f"color_pion : {color_pion}")
-
-        print(f"coord_release : {coord_release}")
+        color_pion = self.widget.find_color(id)
 
         if color_pion == "noir" and (
             coord_release[1] >= 540 and coord_release[3] >= 540
@@ -139,6 +134,12 @@ class App:
 
         self.lst_coord = []
 
+        """
+        Mise a jour de la liste des cases vides avant de commencer les calculs
+
+        """
+        self.lst_case_vide = self.widget.maj_lst_case_vide()
+
         # On identifie l'objet selectionné par le clic de souris
         self.id = self.widget.find_id(coord)
 
@@ -154,14 +155,20 @@ class App:
 
         # On vérifie que c'est bien un pion qui est selectionné
         """ Vérification que c'est bien un pion qui est sélectionné et non
-        une case noir ou rien """
+        une case noir ou une dame """
         if 100 < self.id < 141:
             # # on recupère la couleur du pion selectionné
-            color_pion = ident_pion_noir_blanc(self.id)
+            color_pion = self.widget.find_color(self.id)
+
             # On regarde a qui le tour sauf si saut
             player = self.player.select_player(
-                self.id, self.lst_depl_pion, self.lst_pb_sup, self.lst_pn_sup
+                self.id,
+                color_pion,
+                self.lst_depl_pion,
+                self.lst_pb_sup,
+                self.lst_pn_sup,
             )
+
 
             """ Vérification de la couleur du pion sélectionné par rapport
             a la couleur du pion qui doit jouer """
@@ -211,17 +218,24 @@ class App:
         # Si select dame
         elif self.id > 140:
             # On recupère la couleur de la dame
-            color_dame = ident_pion_noir_blanc(self.id)
+            color_dame = self.widget.find_color(self.id)
+            print(f"color_dame : {color_dame}")
 
             player = self.player.select_player(
-                self.id, self.lst_depl_pion, self.lst_pb_sup, self.lst_pn_sup
+                self.id,
+                color_dame,
+                self.lst_depl_pion,
+                self.lst_pb_sup,
+                self.lst_pn_sup,
             )
+
+            print(f"player : {player}")
 
             if player == color_dame:
                 self.widget.can.itemconfigure(self.id, fill="red", outline="red")
 
                 # On affecte les coordonnées
-                self.pos_dame_select = (
+                self.pos_pion_select = (
                     int(coord_id[0]),
                     int(coord_id[1]),
                     int(coord_id[0] + 60),
@@ -231,12 +245,12 @@ class App:
                 # On récuprère la lise des deplacements possible
                 self.dict_depl = {}
 
-                sol_dame = SolDeplDames(self.pos_dame_select, self.lst_case_vide)
+                sol_dame = SolDeplDames(self.pos_pion_select, self.lst_case_vide)
                 self.dict_depl = sol_dame.solution_depl_dame()
 
                 # On convertie le dictionnaire des solutions en liste de tuples
                 self.lst_case_possible = convert_dict_lst(
-                    self.dict_depl, self.pos_dame_select
+                    self.dict_depl, self.pos_pion_select
                 )
 
                 self.widget.color_case_possible(self.lst_case_possible)
@@ -255,16 +269,19 @@ class App:
 
         # 1- Relachement du clic au même endroit sur un pion
         # On vérifie que c'est bien un pion qui a été sélectionné
-        if 100 < self.id < 141:
+        # if 100 < self.id < 141:
+        if self.id > 100:
+            # C'est un pion
             # On récupère la couleur du pion sélectionné
-            color_pion = ident_pion_noir_blanc(self.id)
+            color_pion = self.widget.find_color(self.id)
+            # color_pion = ident_pion_noir_blanc(self.id)
 
             if (
                 self.pos_pion_select[0] == coord_release[0]
                 and self.pos_pion_select[1] == coord_release[1]
             ):
                 """
-                Le pios reste sur la même case
+                Le pion reste sur la même case
                 - On relance la fonction de restauration des couleurs du pion
                 - On relance la fonction de restauration des cases noirs
                     suite au case jaunes
@@ -274,8 +291,6 @@ class App:
                 self.widget.restor_pion_ou_dame(self.id, color_pion)
 
                 self.widget.restor_case_noir()
-
-                # self.widget.restor_pion_ou_dame(self.id, color_pion)
 
             # Relachement du clic sur une autre case
             else:
@@ -297,15 +312,10 @@ class App:
                 if coord_release in self.lst_case_possible:
                     """
                     La case de déstination est valide
+                    - Vérification si deplacement simple
                     """
-                    # On vérifie si saut ou non
                     if len(self.lst_pb_sup) == 0 and len(self.lst_pn_sup) == 0:
-                        """
-                        On commence par vérifier si c'est un deplacement simple
-                        ou un saut
-                        """
-
-                        """ Deplacement simple """
+                        """Deplacement simple"""
 
                         self.widget.depl_pion(
                             self.id, coord_release, color_pion, self.pos_pion_select
@@ -339,6 +349,8 @@ class App:
                         creation d'une dame 
                         """
                         self.verif_creation_dame(self.id, coord_release)
+
+                        self.lst_case_vide = self.widget.maj_lst_case_vide()
 
                     else:
                         """Saut simple ou multiple"""
@@ -399,6 +411,12 @@ class App:
                         # Vérification si création d'une dame
                         self.verif_creation_dame(self.id, coord_release)
 
+                        """
+                        Mise a jour de la liste des cases vides au cas ou une dame 
+                        serait créer
+                        """
+                        self.lst_case_vide = self.widget.maj_lst_case_vide()
+
                         # Suppression de l'id dans la liste des ids afin
                         # de savoir si le jeu est terminé
                         if (
@@ -414,35 +432,33 @@ class App:
                 else:
                     pass
 
-        elif self.id > 140:
-            color_dame = self.widget.can.gettags(self.id)
-            color_dame = color_dame[0]
-            print(f"color_dame : {color_dame}")
-            print(f"self.id : {self.id}")
-
-            # Relachement du clic au même endroit
-            if (
-                self.pos_dame_select[0] == coord_release[0]
-                and self.pos_dame_select[1] == coord_release[1]
-            ):
-                self.widget.restor_pion_ou_dame(self.id, color_dame)
-
-                self.widget.restor_case_noir()
-
-            else:
-                # La case de destination n'est pas valide
-                if (
-                    len(self.lst_case_possible) == 0
-                    or coord_release not in self.lst_case_possible
-                ):
-                    # On lance la restoration de la dame
-                    self.widget.restor_pion_ou_dame(self.id, color_dame)
-
-                # La case de destination est valide
-                else:
-                    if coord_release in self.lst_case_possible:
-                        # On vérifie si saut ou non
-                        pass
+        # elif self.id > 140:
+        #     color_dame = self.widget.can.gettags(self.id)
+        #     color_dame = color_dame[0]
+        #
+        #     # Relachement du clic au même endroit
+        #     if (
+        #         self.pos_dame_select[0] == coord_release[0]
+        #         and self.pos_dame_select[1] == coord_release[1]
+        #     ):
+        #         self.widget.restor_pion_ou_dame(self.id, color_dame)
+        #
+        #         self.widget.restor_case_noir()
+        #
+        #     else:
+        #         # La case de destination n'est pas valide
+        #         if (
+        #             len(self.lst_case_possible) == 0
+        #             or coord_release not in self.lst_case_possible
+        #         ):
+        #             # On lance la restoration de la dame
+        #             self.widget.restor_pion_ou_dame(self.id, color_dame)
+        #
+        #         # La case de destination est valide
+        #         else:
+        #             if coord_release in self.lst_case_possible:
+        #                 # On vérifie si saut ou non
+        #                 pass
 
         else:
             pass

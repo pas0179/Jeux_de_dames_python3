@@ -24,8 +24,6 @@ class SautDame:
         cases_vides,
         pions_noirs,
         pions_blancs,
-        dames_noirs,
-        dames_blancs,
     ):
         self.id_dame = id_dame
         self.position = position
@@ -33,5 +31,3 @@ class SautDame:
         self.cases_vides = cases_vides
         self.pions_noirs = pions_noirs
         self.pions_blancs = pions_blancs
-        self.dames_noirs = dames_noirs
-        self.dames_blancs = dames_blancs

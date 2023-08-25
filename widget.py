@@ -12,12 +12,6 @@ class Widget:
         self.lst_id_pb = []
         self.lst_case_vide = []
 
-        self.lst_id_dame_noir = []
-        self.lst_id_dame_blanc = []
-
-        self.pos_dame_noir = []
-        self.pos_dame_blanc = []
-
         self.id_dame = 141
 
         # Listes des cases jaunes ( case possible)
@@ -29,9 +23,6 @@ class Widget:
 
         self.lst_pos_pn = self.lst_cases_noir[0:20]
         self.lst_pos_pb = self.lst_cases_noir[30:]
-
-        self.lst_pos_dn = []
-        self.lst_pos_db = []
 
         self.create_pion()
 
@@ -83,22 +74,6 @@ class Widget:
             self.lst_id_pb.append(id_pb)
             id_pb += 1
 
-    def create_dame_noir(self, x, y):
-        # création des dames
-        pos_x, pos_y = x, y
-
-        DameNoir(self.can, pos_x, pos_y)
-        self.lst_id_dame_noir.append(self.id_dame)
-        self.lst_pos_dn.append((pos_x, pos_y, pos_x + 60, pos_y + 60))
-        self.id_dame += 1
-
-    def create_dame_blanche(self, x, y):
-        pos_x, pos_y = x, y
-        DameBlanche(self.can, pos_x, pos_y)
-        self.lst_id_dame_blanc.append(self.id_dame)
-        self.lst_pos_db.append((pos_x, pos_y, pos_x + 60, pos_y + 60))
-        self.id_dame += 1
-
     def maj_lst_case_vide(self):
         lst_case_vide = []
 
@@ -119,9 +94,21 @@ class Widget:
 
         return id
 
+    def find_color(self, id):
+        color = ""
+
+        if 100 < id < 141:
+            color = ident_pion_noir_blanc(id)
+        elif id > 140:
+            color = self.can.gettags(id)[0]
+        else:
+            pass
+
+        return color
+
     def maj_lst_pos_pion(self, id, old_pos, new_pos):
         # On commence par la couleur du pion
-        color_pion = ident_pion_noir_blanc(id)
+        color_pion = self.find_color(id)
 
         old_pos = (old_pos[0], old_pos[1], old_pos[0] + 60, old_pos[1] + 60)
 
@@ -188,14 +175,10 @@ class Widget:
             pass
 
     def restor_dame_blanche_noir(self, id, color_dame):
-        pion = ident_pion_noir_blanc(id)
-        if pion == "dame":
-            if color_dame == "blanc":
-                self.can.itemconfigure(id, fill="white", outline="#e67e22")
-            elif color_dame == "noir":
-                self.can.itemconfigure(id, fill="black", outline="#e67e22")
-            else:
-                pass
+        if color_dame == "blanc":
+            self.can.itemconfigure(id, fill="white", outline="#e67e22")
+        elif color_dame == "noir":
+            self.can.itemconfigure(id, fill="black", outline="#e67e22")
         else:
             pass
 
@@ -234,7 +217,7 @@ class Widget:
             (self.find_id((val[0] + 15, val[1] + 15))) for val in lst_pion_sup
         ]
 
-        color_pion = ident_pion_noir_blanc(id)
+        color_pion = self.find_color(id)
 
         if color_pion == "noir":
             for val in lst_id_pion_sup:
@@ -257,6 +240,22 @@ class Widget:
 
         else:
             pass
+
+    def create_dame_noir(self, x, y):
+        # création des dames
+        pos_x, pos_y = x, y
+
+        DameNoir(self.can, pos_x, pos_y)
+        self.lst_id_pn.append(self.id_dame)
+        self.lst_pos_pn.append((pos_x, pos_y, pos_x + 60, pos_y + 60))
+        self.id_dame += 1
+
+    def create_dame_blanche(self, x, y):
+        pos_x, pos_y = x, y
+        DameBlanche(self.can, pos_x, pos_y)
+        self.lst_id_pb.append(self.id_dame)
+        self.lst_pos_pb.append((pos_x, pos_y, pos_x + 60, pos_y + 60))
+        self.id_dame += 1
 
 
 class PionNoir:

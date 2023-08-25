@@ -10,8 +10,6 @@ def ident_pion_noir_blanc(id):
         pion = "noir"
     elif 120 < id < 141:
         pion = "blanc"
-    elif id > 140:
-        pion = "dame"
     else:
         pass
 
