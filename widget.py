@@ -20,6 +20,9 @@ class Widget:
 
         self.id_dame = 141
 
+        # Listes des cases jaunes ( case possible)
+        self.lst_id_case_jaune = []
+
         self.create_damier()
 
         self.damier = []
@@ -98,16 +101,21 @@ class Widget:
 
     def maj_lst_case_vide(self):
         lst_case_vide = []
-        for i in self.lst_cases_noir:
-            if i not in self.lst_pos_pn and i not in self.lst_pos_pb:
-                lst_case_vide.append((i[0], i[1], i[0] + 60, i[1] + 60))
-            else:
-                pass
+
+        """ Création de la liste des cases vides sur l'échiquier """
+
+        lst_case_vide = [
+            (i[0], i[1], i[0] + 60, i[1] + 60)
+            for i in self.lst_cases_noir
+            if i not in self.lst_pos_pn and i not in self.lst_pos_pb
+        ]
+
         return lst_case_vide
 
     def find_id(self, coord):
         x, y = coord[0], coord[1]
         id = self.can.find_closest(x, y)
+        id = id[0]
 
         return id
 
@@ -133,10 +141,40 @@ class Widget:
             else:
                 pass
 
-    def restor_case_noir(self, lst_ids):
-        if len(lst_ids) > 0:
-            for el in lst_ids:
+    def restor_case_noir(self):
+        """
+        On applique la couleur noir aux cases jaunes qui sont dans la liste
+        des ids des cases jaunes
+
+        """
+        if len(self.lst_id_case_jaune) > 0:
+            for el in self.lst_id_case_jaune:
                 self.can.itemconfigure(el, fill="#3f0b01")
+        else:
+            pass
+
+    def color_case_possible(self, lst_case_possible):
+        self.lst_id_case_jaune = []
+
+        """
+        Recherche des ids des cases noirs dans la listes des cases possible
+        et enregistrement des ids dans une liste
+
+        """
+        if len(lst_case_possible) > 0:
+            self.lst_id_case_jaune = [(self.find_id(val)) for val in lst_case_possible]
+
+        else:
+            pass
+
+        """
+        On applique la couleur jaune aux cases noirs qui sont dans la liste
+        des ids des cases possible
+
+        """
+        if len(self.lst_id_case_jaune) > 0:
+            for el in self.lst_id_case_jaune:
+                self.can.itemconfigure(el, fill="yellow")
         else:
             pass
 
@@ -151,7 +189,6 @@ class Widget:
 
     def restor_dame_blanche_noir(self, id, color_dame):
         pion = ident_pion_noir_blanc(id)
-        print(pion)
         if pion == "dame":
             if color_dame == "blanc":
                 self.can.itemconfigure(id, fill="white", outline="#e67e22")
@@ -193,12 +230,9 @@ class Widget:
     def sup_pion(self, id, lst_pion_sup):
         lst_id_pion_sup = []
 
-        for val in lst_pion_sup:
-            val = (val[0] + 15, val[1] + 15)
-            id_pion_sup = self.find_id(val)
-            id_pion_sup = id_pion_sup[0]
-
-            lst_id_pion_sup.append(id_pion_sup)
+        lst_id_pion_sup = [
+            (self.find_id((val[0] + 15, val[1] + 15))) for val in lst_pion_sup
+        ]
 
         color_pion = ident_pion_noir_blanc(id)
 

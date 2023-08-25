@@ -140,8 +140,7 @@ class App:
         self.lst_coord = []
 
         # On identifie l'objet selectionné par le clic de souris
-        self.id_ps = self.widget.find_id(coord)
-        self.id = self.id_ps[0]
+        self.id = self.widget.find_id(coord)
 
         #   On récupère les coordonnées de l'objet selectionné
         coord_id = self.widget.can.coords(self.id)
@@ -154,65 +153,58 @@ class App:
         ]
 
         # On vérifie que c'est bien un pion qui est selectionné
+        """ Vérification que c'est bien un pion qui est sélectionné et non
+        une case noir ou rien """
         if 100 < self.id < 141:
             # # on recupère la couleur du pion selectionné
             color_pion = ident_pion_noir_blanc(self.id)
-
-            # On affecte les coordonnées
-            self.pos_pion_select = (
-                int(coord_id[0]),
-                int(coord_id[1]),
-                int(coord_id[0] + 60),
-                int(coord_id[1] + 60),
-            )
-
-            # On récupère le dictionnaires des déplacements possibles
-            self.dict_depl = {}
-
-            sol = Move(
-                self.id,
-                self.pos_pion_select,
-                self.lst_case_vide,
-                self.widget.lst_pos_pn,
-                self.widget.lst_pos_pb,
-            )
-            self.dict_depl = sol.dict_solution
-            self.lst_pn_sup = sol.lst_pn_sup
-            self.lst_pb_sup = sol.lst_pb_sup
-
-            # On lance la conversion pour passer d'un dictionnaire
-            # a une liste de tuples
-            self.lst_case_possible = convert_dict_lst(
-                self.dict_depl, self.pos_pion_select
-            )
-
             # On regarde a qui le tour sauf si saut
             player = self.player.select_player(
                 self.id, self.lst_depl_pion, self.lst_pb_sup, self.lst_pn_sup
             )
 
+            """ Vérification de la couleur du pion sélectionné par rapport
+            a la couleur du pion qui doit jouer """
             if player == color_pion:
+                """On applique la couleur rouge sur le pion sélectionné"""
                 self.widget.can.itemconfigure(self.id, fill="red", outline="red")
 
-                # Trouver les ids des solutions pour changer la couleur
-                # des cases noirs en cases jaunes afin de voir les solutions
-                self.lst_ids = []
-                if len(self.lst_case_possible) > 0:
-                    for val in self.lst_case_possible:
-                        id = self.widget.find_id(val)
-                        self.lst_ids.append(id[0])
+                """ Ajout dans le tuple des valeurs x+60 et y+60 """
+                self.pos_pion_select = (
+                    int(coord_id[0]),
+                    int(coord_id[1]),
+                    int(coord_id[0] + 60),
+                    int(coord_id[1] + 60),
+                )
 
-                else:
-                    pass
+                """ Récuperation du dictionnaire des déplacements possibles """
+                self.dict_depl = {}
 
-                if len(self.lst_ids) > 0:
-                    for el in self.lst_ids:
-                        self.widget.can.itemconfigure(
-                            el,
-                            fill="yellow",
-                        )
-                else:
-                    pass
+                sol = Move(
+                    self.id,
+                    self.pos_pion_select,
+                    self.lst_case_vide,
+                    self.widget.lst_pos_pn,
+                    self.widget.lst_pos_pb,
+                )
+                self.dict_depl = sol.dict_solution
+                self.lst_pn_sup = sol.lst_pn_sup
+                self.lst_pb_sup = sol.lst_pb_sup
+
+                # On lance la conversion pour passer d'un dictionnaire
+                # a une liste de tuples
+                self.lst_case_possible = convert_dict_lst(
+                    self.dict_depl, self.pos_pion_select
+                )
+
+                """
+                On va jaunir les cases noirs pour voir les solutions
+                avec la méthode color_case_possible dans la class Widget 
+
+                """
+
+                self.widget.color_case_possible(self.lst_case_possible)
+
             else:
                 messagebox.showinfo("Erreur", "Ce nest pas a vous de jouer !!!")
 
@@ -221,53 +213,36 @@ class App:
             # On recupère la couleur de la dame
             color_dame = ident_pion_noir_blanc(self.id)
 
-            # On affecte les coordonnées
-            self.pos_dame_select = (
-                int(coord_id[0]),
-                int(coord_id[1]),
-                int(coord_id[0] + 60),
-                int(coord_id[1] + 60),
-            )
-
-            # On récuprère la lise des deplacements possible
-            self.dict_depl = {}
-
-            sol_dame = SolDeplDames(self.pos_dame_select, self.lst_case_vide)
-            self.dict_depl = sol_dame.solution_depl_dame()
-
-            # On convertie le dictionnaire des solutions en liste de tuples
-            self.lst_case_possible = convert_dict_lst(
-                self.dict_depl, self.pos_dame_select
-            )
-
-            # On va jaunir les cases noirs pour voir les solutions
-            self.lst_ids = []
-            if len(self.lst_case_possible) > 0:
-                for val in self.lst_case_possible:
-                    id = self.widget.find_id(val)
-                    self.lst_ids.append(id[0])
-            else:
-                pass
-
-            if len(self.lst_ids) > 0:
-                for el in self.lst_ids:
-                    self.widget.can.itemconfigure(
-                        el,
-                        fill="yellow",
-                    )
-            else:
-                pass
-
-            # On regarde a qui le tour
             player = self.player.select_player(
                 self.id, self.lst_depl_pion, self.lst_pb_sup, self.lst_pn_sup
             )
 
-            if player != color_dame:
-                messagebox.showinfo("Erreur", "Ce n'est pas a vous de jouer !!!")
-            else:
+            if player == color_dame:
                 self.widget.can.itemconfigure(self.id, fill="red", outline="red")
 
+                # On affecte les coordonnées
+                self.pos_dame_select = (
+                    int(coord_id[0]),
+                    int(coord_id[1]),
+                    int(coord_id[0] + 60),
+                    int(coord_id[1] + 60),
+                )
+
+                # On récuprère la lise des deplacements possible
+                self.dict_depl = {}
+
+                sol_dame = SolDeplDames(self.pos_dame_select, self.lst_case_vide)
+                self.dict_depl = sol_dame.solution_depl_dame()
+
+                # On convertie le dictionnaire des solutions en liste de tuples
+                self.lst_case_possible = convert_dict_lst(
+                    self.dict_depl, self.pos_dame_select
+                )
+
+                self.widget.color_case_possible(self.lst_case_possible)
+
+            else:
+                messagebox.showinfo("Erreur", "Ce n'est pas a vous de jouer !!!")
         else:
             self.id = 0
 
@@ -288,41 +263,67 @@ class App:
                 self.pos_pion_select[0] == coord_release[0]
                 and self.pos_pion_select[1] == coord_release[1]
             ):
-                # Même endroit, on applique la couleur d'origine du pion
-                # selectionné. On lance la fonction de restauration
-                # des couleurs
+                """
+                Le pios reste sur la même case
+                - On relance la fonction de restauration des couleurs du pion
+                - On relance la fonction de restauration des cases noirs
+                    suite au case jaunes
+
+                """
+
                 self.widget.restor_pion_ou_dame(self.id, color_pion)
-                self.widget.restor_case_noir(self.lst_ids)
+
+                self.widget.restor_case_noir()
+
+                # self.widget.restor_pion_ou_dame(self.id, color_pion)
 
             # Relachement du clic sur une autre case
             else:
-                # 1- La case de destination n'est pas valide
                 if (
                     len(self.lst_case_possible) == 0
                     or coord_release not in self.lst_case_possible
                 ):
-                    # On lance la fonction "restor_pion"
-                    self.widget.restor_pion_ou_dame(self.id, color_pion)
-                    # self.widget.restor_case_noir(self.lst_ids)
+                    """
+                    La case de destination n'est pas valide
+                    - On relance la fonction de restauration des couleurs du pion
+                    - On relance la fonction de restauration des cases noirs
 
-                # 2- La case de destination est valide
+                    """
+
+                    self.widget.restor_pion_ou_dame(self.id, color_pion)
+
+                    self.widget.restor_case_noir()
+
                 if coord_release in self.lst_case_possible:
+                    """
+                    La case de déstination est valide
+                    """
                     # On vérifie si saut ou non
                     if len(self.lst_pb_sup) == 0 and len(self.lst_pn_sup) == 0:
-                        # Déplacement simple du pion avec la fonction
-                        # depl_pion
+                        """
+                        On commence par vérifier si c'est un deplacement simple
+                        ou un saut
+                        """
+
+                        """ Deplacement simple """
+
                         self.widget.depl_pion(
                             self.id, coord_release, color_pion, self.pos_pion_select
                         )
-                        # Maj de la liste des cases vides
+
+                        """ Mise a jour de la liste des cases vides """
+
                         self.lst_case_vide = self.widget.maj_lst_case_vide()
 
-                        # Restauration des couleurs d'origine
-                        # Doit etre desactivé si les cases possibles
-                        # Ne sont plus visible en jaune
-                        self.widget.restor_case_noir(self.lst_ids)
-                        # Enregistrement du déplacement dans une liste
-                        # 0: pas de saut, 1: saut d'un pion
+                        """ restoration des cases jaunes en noir"""
+
+                        self.widget.restor_case_noir()
+
+                        """ 
+                        Enregistrement du deplacement dans une liste qui sert a Player
+                        0: pas de saut, 1: saut d'un pion
+
+                        """
                         self.lst_depl_pion.append(
                             (
                                 self.id,
@@ -333,21 +334,32 @@ class App:
                             )
                         )
 
-                        # Vérification si création d'une dame
+                        """ 
+                        Verification si le pion est sur une case pour 
+                        creation d'une dame 
+                        """
                         self.verif_creation_dame(self.id, coord_release)
 
                     else:
-                        # Déplacement du pion selctionné avec un saut
+                        """Saut simple ou multiple"""
+
                         self.widget.depl_pion(
                             self.id, coord_release, color_pion, self.pos_pion_select
                         )
+
+                        """ Mise a jour de la liste des cases vides """
                         self.lst_case_vide = self.widget.maj_lst_case_vide()
 
-                        self.widget.restor_case_noir(self.lst_ids)
+                        """ Restauration des cases jaunes en noir """
+                        self.widget.restor_case_noir()
 
                         # Fonction pour trouver le pion sauté et
                         # le supprimer de la liste des pion noir ou blanc
-
+                        """"
+                        Appel a la class SuppPion du fichier 'supp_pion.py'
+                        pour supprimer les pions sautés 
+                           
+                        """
                         sup_pion = SuppPion(
                             self.id,
                             self.pos_pion_select,
@@ -358,14 +370,20 @@ class App:
                             self.lst_pb_sup,
                         )
 
+                        """ Récuperation de la liste des pions a supprimer """
                         lst_pion_sup = sup_pion.sup_pion()
 
-                        if len(lst_pion_sup) > 0:
-                            self.widget.sup_pion(self.id, lst_pion_sup)
-                            # Mise a jour de la liste des cases vides
-                            self.lst_case_vide = self.widget.maj_lst_case_vide()
-                        else:
-                            pass
+                        """ 
+                        Suppression des pions sautés avec la methode sup_pion 
+                        de la class Widget 
+
+                        """
+                        self.widget.sup_pion(self.id, lst_pion_sup)
+
+                        """ 
+                        Mise a jour des la liste des cases vides 
+                        """
+                        self.lst_case_vide = self.widget.maj_lst_case_vide()
 
                         # Enregistrement du déplacement dans un dictionnaire
                         self.lst_depl_pion.append(
@@ -409,7 +427,7 @@ class App:
             ):
                 self.widget.restor_pion_ou_dame(self.id, color_dame)
 
-                self.widget.restor_case_noir(self.lst_ids)
+                self.widget.restor_case_noir()
 
             else:
                 # La case de destination n'est pas valide

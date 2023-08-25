@@ -40,11 +40,8 @@ def convert_dict_lst(dict, pos_pion):
 
         # Nettoyage de la position de départ
         lst_temp = []
-        for el in lst_case_possible:
-            if el != pos_pion:
-                lst_temp.append(el)
-            else:
-                pass
+
+        lst_temp = [el for el in lst_case_possible if el != pos_pion]
 
         lst_case_possible = lst_temp
 

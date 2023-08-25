@@ -95,22 +95,13 @@ class Sauts:
         lst_last_pos = []
 
         # Récup des dernieres positions dans le dictionnaire
-        for val in dict_temp.values():
-            if len(val) > 0:
-                newpos = val[-1]
-                oldpos = val[-2]
-                lst_last_pos.append((oldpos, newpos))
-            else:
-                continue
+
+        lst_last_pos = [(val[-2], val[-1]) for val in dict_temp.values()]
 
         # Nettoyage des doublons dans la liste
         lst_temp1 = []
 
-        for val in lst_last_pos:
-            if val not in lst_temp1:
-                lst_temp1.append(val)
-            else:
-                continue
+        lst_temp1 = [val for val in lst_last_pos if val not in lst_temp1]
 
         if len(lst_temp1) > 0:
             lst_last_pos = lst_temp1
@@ -223,11 +214,8 @@ class Sauts:
                     continue
 
             if len(dict_saut) > 0:
-                # print(f"dict saut: {dict_saut}")
                 self.dict_saut = self.fusion_dict(self.dict_saut, dict_saut)
-                # print(f"self.dict_saut: {self.dict_saut}")
                 lst_last_pos = self.find_last_pos_dict(self.dict_saut)
-                # print(f"lst_last_pos: {lst_last_pos}")
             else:
                 lst_last_pos = []
 
