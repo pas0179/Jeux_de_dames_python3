@@ -110,12 +110,12 @@ def depl_pion_haut_droit(pos_pion_select):
     return depl_h_d
 
 
-def saut_bas_g(id, pion_select, lst_case_vide, pos_pn, pos_pb):
+def saut_bas_g(pion_select, color_pion, lst_case_vide, pos_pn, pos_pb):
     saut = ()
     pn_sup, pb_sup = (), ()
     new_pos = ()
 
-    color_pion = ident_pion_noir_blanc(id)
+    # color_pion = ident_pion_noir_blanc(id)
 
     depl_bg = depl_pion_bas_gauche(pion_select)
 
@@ -144,12 +144,12 @@ def saut_bas_g(id, pion_select, lst_case_vide, pos_pn, pos_pb):
     return saut, pn_sup, pb_sup
 
 
-def saut_bas_d(id, pion_select, lst_case_vide, pos_pn, pos_pb):
+def saut_bas_d(pion_select, color_pion, lst_case_vide, pos_pn, pos_pb):
     saut = ()
     pn_sup, pb_sup = (), ()
     new_pos = ()
 
-    color_pion = ident_pion_noir_blanc(id)
+    # color_pion = ident_pion_noir_blanc(id)
 
     depl_bd = depl_pion_bas_droit(pion_select)
 
@@ -177,12 +177,12 @@ def saut_bas_d(id, pion_select, lst_case_vide, pos_pn, pos_pb):
     return saut, pn_sup, pb_sup
 
 
-def saut_haut_g(id, pion_select, lst_case_vide, pos_pn, pos_pb):
+def saut_haut_g(pion_select, color_pion, lst_case_vide, pos_pn, pos_pb):
     saut = ()
     pn_sup, pb_sup = (), ()
     new_pos = ()
 
-    color_pion = ident_pion_noir_blanc(id)
+    # color_pion = ident_pion_noir_blanc(id)
 
     depl_hg = depl_pion_haut_gauche(pion_select)
 
@@ -211,12 +211,12 @@ def saut_haut_g(id, pion_select, lst_case_vide, pos_pn, pos_pb):
     return saut, pn_sup, pb_sup
 
 
-def saut_haut_d(id, pion_select, lst_case_vide, pos_pn, pos_pb):
+def saut_haut_d(pion_select, color_pion, lst_case_vide, pos_pn, pos_pb):
     saut = ()
     pn_sup, pb_sup = (), ()
     new_pos = ()
 
-    color_pion = ident_pion_noir_blanc(id)
+    # color_pion = ident_pion_noir_blanc(id)
 
     depl_hd = depl_pion_haut_droit(pion_select)
 

@@ -10,9 +10,10 @@ from solution_depl_saut import Sauts
 
 
 class Move:
-    def __init__(self, id, pos_pion, lst_case_vide, pos_pn, pos_pb):
-        self.id = id
+    def __init__(self, pos_pion, color_pion, lst_case_vide, pos_pn, pos_pb):
+        
         self.pos_pion = pos_pion
+        self.color_pion = color_pion
         self.lst_case_vide = lst_case_vide
         self.pos_pn = pos_pn
         self.pos_pb = pos_pb
@@ -25,8 +26,9 @@ class Move:
 
     def start_calcul_possibilite(self):
         sol = Sauts(
-            self.id,
+            # self.id,
             self.pos_pion,
+            self.color_pion,
             self.lst_case_vide,
             self.pos_pn,
             self.pos_pb,
@@ -43,8 +45,9 @@ class Move:
 
         else:
             sol2 = Deplacement(
-                self.id,
+                # self.id,
                 self.pos_pion,
+                self.color_pion,
                 self.lst_case_vide,
                 self.pos_pn,
                 self.pos_pb,

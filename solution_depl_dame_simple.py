@@ -13,139 +13,91 @@ from fonctions import (
 
 
 class SolDeplDames:
-    def __init__(self, dame_select, lst_case_vide):
-        self.dame_select = dame_select  # Pos de la dame_select
-        self.lst_case_vide = lst_case_vide  # liste des cases vides
-
+    def __init__(self):
         self.sol = "solution_"
         self.compteur = 0
 
-        self.dict_depl = {}
+        self.dict_depl_b_droit = {}
+        self.dict_depl_h_gauche = {}
+        self.dict_depl_h_droit = {}
 
-    def solution_depl_dame_b_gauche(self):
-        pos_pion = self.dame_select
+    def solution_depl_dame_b_gauche(self, pos_dame, lst_case_vide):
+        lst_depl_b_gauche = []
 
-        depl_b_g = depl_pion_bas_gauche(pos_pion)
+        while len(pos_dame) > 0:
+            depl_temp = ()
+            depl_temp = depl_pion_bas_gauche(pos_dame)
 
-        if len(depl_b_g) > 0 and depl_b_g in self.lst_case_vide:
-            # Si la case est vide on incrémente le N° de la solution
-            self.compteur += 1
+            if len(depl_temp) > 0 and depl_temp in lst_case_vide:
+                lst_depl_b_gauche.append(depl_temp)
 
-            # Si la case est vide, on crée la solution de déplacement
-            self.dict_depl[self.sol + str(self.compteur)] = [pos_pion, depl_b_g]
+                pos_dame = depl_temp
 
-            # La nouvelle position de départ est décalé de 1
-            pos_pion = depl_b_g
+            else:
+                pos_dame = ()
 
-            while len(pos_pion) > 0:
-                depl_temp = ()
-                depl_temp = depl_pion_bas_gauche(pos_pion)
+        return lst_depl_b_gauche
 
-                if len(depl_temp) > 0 and depl_temp in self.lst_case_vide:
-                    # Si la case est vide, on l'ajoute a la solution de déplacement
-                    self.dict_depl[self.sol + str(self.compteur)].append(depl_temp)
+    def solution_depl_dame_b_droit(self, pos_dame, lst_case_vide):
+        lst_depl_b_droit = []
 
-                    # On modifie la nouvelle position de départ
-                    pos_pion = depl_temp
+        while len(pos_dame) > 0:
+            depl_temp = ()
+            depl_temp = depl_pion_bas_droit(pos_dame)
 
-                else:
-                    pos_pion = ()
-        else:
-            pass
+            if len(depl_temp) > 0 and depl_temp in lst_case_vide:
+                lst_depl_b_droit.append(depl_temp)
 
-    def solution_depl_dame_b_droit(self):
-        pos_pion = self.dame_select
+                pos_dame = depl_temp
 
-        depl_b_d = depl_pion_bas_droit(pos_pion)
+            else:
+                pos_dame = ()
 
-        if len(depl_b_d) > 0 and depl_b_d in self.lst_case_vide:
-            # Si la case est vide on incrémente le N° de la solution
-            self.compteur += 1
+        return lst_depl_b_droit
 
-            self.dict_depl[self.sol + str(self.compteur)] = [pos_pion, depl_b_d]
+    def solution_depl_dame_h_gauche(self, pos_dame, lst_case_vide):
+        lst_depl_h_gauche = []
 
-            pos_pion = depl_b_d
+        while len(pos_dame) > 0:
+            depl_temp = ()
+            depl_temp = depl_pion_haut_gauche(pos_dame)
 
-            while len(pos_pion) > 0:
-                depl_temp = ()
-                depl_temp = depl_pion_bas_droit(pos_pion)
+            if len(depl_temp) > 0 and depl_temp in lst_case_vide:
+                lst_depl_h_gauche.append(depl_temp)
 
-                if len(depl_temp) > 0 and depl_temp in self.lst_case_vide:
-                    self.dict_depl[self.sol + str(self.compteur)].append(depl_temp)
+                pos_dame = depl_temp
 
-                    pos_pion = depl_temp
+            else:
+                pos_dame = ()
 
-                else:
-                    pos_pion = ()
+        return lst_depl_h_gauche
 
-        else:
-            pass
+    def solution_depl_dame_h_droit(self, pos_dame, lst_case_vide):
+        lst_depl_h_droit = []
 
-    def solution_depl_dame_h_gauche(self):
-        pos_pion = self.dame_select
+        while len(pos_dame) > 0:
+            depl_temp = ()
+            depl_temp = depl_pion_haut_droit(pos_dame)
 
-        depl_h_g = depl_pion_haut_gauche(pos_pion)
+            if len(depl_temp) > 0 and depl_temp in lst_case_vide:
+                lst_depl_h_droit.append(depl_temp)
 
-        if len(depl_h_g) > 0 and depl_h_g in self.lst_case_vide:
-            # Si la case est vide on incrémente le N° de la solution
-            self.compteur += 1
+                pos_dame = depl_temp
 
-            # Si la case est vide, on crée la solution de déplacement
-            self.dict_depl[self.sol + str(self.compteur)] = [pos_pion, depl_h_g]
+            else:
+                pos_dame = ()
 
-            # La nouvelle position de départ est décalé de 1
-            pos_pion = depl_h_g
+        return lst_depl_h_droit
 
-            while len(pos_pion) > 0:
-                depl_temp = ()
-                depl_temp = depl_pion_haut_gauche(pos_pion)
+    """ Créer pour les tests dans main """
+    def solution_depl_dame(self, pos_dame, lst_case_vide):
+        lst_depl = []
 
-                if len(depl_temp) > 0 and depl_temp in self.lst_case_vide:
-                    # Si la case est vide, on l'ajoute a la solution de déplacement
-                    self.dict_depl[self.sol + str(self.compteur)].append(depl_temp)
+        depl_b_g = self.solution_depl_dame_b_gauche(pos_dame, lst_case_vide)
+        depl_b_d = self.solution_depl_dame_b_droit(pos_dame, lst_case_vide)
+        depl_h_g = self.solution_depl_dame_h_gauche(pos_dame, lst_case_vide)
+        depl_h_d = self.solution_depl_dame_h_droit(pos_dame, lst_case_vide)
 
-                    # On modifie la nouvelle position de départ
-                    pos_pion = depl_temp
+        lst_depl = [*depl_b_g, *depl_b_d, *depl_h_g, *depl_h_d]
 
-                else:
-                    pos_pion = ()
-
-        else:
-            pass
-
-    def solution_depl_dame_h_droit(self):
-        pos_pion = self.dame_select
-
-        depl_h_d = depl_pion_haut_droit(pos_pion)
-
-        if len(depl_h_d) > 0 and depl_h_d in self.lst_case_vide:
-            self.compteur += 1
-
-            self.dict_depl[self.sol + str(self.compteur)] = [pos_pion, depl_h_d]
-
-            pos_pion = depl_h_d
-
-            while len(pos_pion) > 0:
-                depl_temp = ()
-            
-                depl_temp = depl_pion_haut_droit(pos_pion)
-            
-                if len(depl_temp) > 0 and depl_temp in self.lst_case_vide:
-                    self.dict_depl[self.sol + str(self.compteur)].append(depl_temp)
-            
-                    pos_pion = depl_temp
-
-                else:
-                    pos_pion = ()
-
-        else:
-            pass
-
-    def solution_depl_dame(self):
-        # Lancement des 4 solutions de deplacement pour la dame
-        self.solution_depl_dame_b_gauche()
-        self.solution_depl_dame_b_droit()
-        self.solution_depl_dame_h_gauche()
-        self.solution_depl_dame_h_droit()
-
-        return self.dict_depl
+        return lst_depl

@@ -7,6 +7,7 @@ from fonctions import (
 )
 from solution_depl import Move
 from player import Player
+from solution_saut_dame import SautDame
 from widget import Widget
 from sup_pion import SuppPion
 from coord_convert import CoordConvert
@@ -169,7 +170,6 @@ class App:
                 self.lst_pn_sup,
             )
 
-
             """ Vérification de la couleur du pion sélectionné par rapport
             a la couleur du pion qui doit jouer """
             if player == color_pion:
@@ -188,8 +188,9 @@ class App:
                 self.dict_depl = {}
 
                 sol = Move(
-                    self.id,
+                    # self.id,
                     self.pos_pion_select,
+                    color_pion,
                     self.lst_case_vide,
                     self.widget.lst_pos_pn,
                     self.widget.lst_pos_pb,
@@ -219,7 +220,6 @@ class App:
         elif self.id > 140:
             # On recupère la couleur de la dame
             color_dame = self.widget.find_color(self.id)
-            print(f"color_dame : {color_dame}")
 
             player = self.player.select_player(
                 self.id,
@@ -228,8 +228,6 @@ class App:
                 self.lst_pb_sup,
                 self.lst_pn_sup,
             )
-
-            print(f"player : {player}")
 
             if player == color_dame:
                 self.widget.can.itemconfigure(self.id, fill="red", outline="red")
@@ -243,18 +241,26 @@ class App:
                 )
 
                 # On récuprère la lise des deplacements possible
-                self.dict_depl = {}
 
-                sol_dame = SolDeplDames(self.pos_pion_select, self.lst_case_vide)
-                self.dict_depl = sol_dame.solution_depl_dame()
-
-                # On convertie le dictionnaire des solutions en liste de tuples
-                self.lst_case_possible = convert_dict_lst(
-                    self.dict_depl, self.pos_pion_select
+                sol = SolDeplDames()
+                sol1 = SautDame()
+                sol2 = sol1.calcul_depl_dame_b_gauche(
+                    self.pos_pion_select,
+                    color_dame,
+                    self.lst_case_vide,
+                    self.widget.lst_pos_pn,
+                    self.widget.lst_pos_pb,
                 )
 
-                self.widget.color_case_possible(self.lst_case_possible)
-
+                print(f"sol2 : {sol2}")
+                # self.lst_case_possible = sol.solution_depl_dame(
+                #     self.pos_pion_select, self.lst_case_vide
+                # )
+                #
+                # print(f"self.lst_case_possible : {self.lst_case_possible}")
+                #
+                # self.widget.color_case_possible(self.lst_case_possible)
+                #
             else:
                 messagebox.showinfo("Erreur", "Ce n'est pas a vous de jouer !!!")
         else:

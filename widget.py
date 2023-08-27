@@ -149,7 +149,9 @@ class Widget:
 
         """
         if len(lst_case_possible) > 0:
-            self.lst_id_case_jaune = [(self.find_id(val)) for val in lst_case_possible]
+            self.lst_id_case_jaune = [
+                (self.find_id(val)) for val in lst_case_possible
+            ]
 
         else:
             pass

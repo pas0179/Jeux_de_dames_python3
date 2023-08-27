@@ -4,7 +4,7 @@
 """
 
 from fonctions import (
-    ident_pion_noir_blanc,
+    # ident_pion_noir_blanc,
     saut_bas_d,
     saut_bas_g,
     saut_haut_d,
@@ -13,9 +13,10 @@ from fonctions import (
 
 
 class Sauts:
-    def __init__(self, id, pos_pion, lst_case_vide, pos_pn, pos_pb):
-        self.id = id
+    def __init__(self, pos_pion, color_pion, lst_case_vide, pos_pn, pos_pb):
+
         self.pos_pion = pos_pion
+        self.color_pion = color_pion
         self.lst_case_vide = lst_case_vide
         self.pos_pn = pos_pn
         self.pos_pb = pos_pb
@@ -37,28 +38,28 @@ class Sauts:
     """
 
     def saut_possible(
-        self, id, pos_pion, oldpos, lst_case_vide, pos_pn, pos_pb
+        self, pos_pion, oldpos, color_pion, lst_case_vide, pos_pn, pos_pb
     ):
         dict_saut = {}
         lst_pn_sup = []
         lst_pb_sup = []
 
         # On commance par la couleur du pion
-        color_pion = ident_pion_noir_blanc(id)
+        # color_pion = ident_pion_noir_blanc(id)
 
         # On définie les listes pour les pions a supprimer
 
         saut1, pnsup1, pbsup1 = saut_bas_g(
-            id, pos_pion, lst_case_vide, pos_pn, pos_pb
+            pos_pion, color_pion, lst_case_vide, pos_pn, pos_pb
         )
         saut2, pnsup2, pbsup2 = saut_bas_d(
-            id, pos_pion, lst_case_vide, pos_pn, pos_pb
+            pos_pion, color_pion, lst_case_vide, pos_pn, pos_pb
         )
         saut3, pnsup3, pbsup3 = saut_haut_d(
-            id, pos_pion, lst_case_vide, pos_pn, pos_pb
+            pos_pion, color_pion, lst_case_vide, pos_pn, pos_pb
         )
         saut4, pnsup4, pbsup4 = saut_haut_g(
-            id, pos_pion, lst_case_vide, pos_pn, pos_pb
+            pos_pion, color_pion, lst_case_vide, pos_pn, pos_pb
         )
 
         if len(saut1) > 0 and saut1 != oldpos:
@@ -204,9 +205,10 @@ class Sauts:
             dict_saut = {}
             for pos in lst_last_pos:
                 dict_temp, pn_sup, pb_sup = self.saut_possible(
-                    self.id,
+                    # self.id,
                     pos[-1],
                     pos[-2],
+                    self.color_pion,
                     self.lst_case_vide,
                     self.pos_pn,
                     self.pos_pb,
