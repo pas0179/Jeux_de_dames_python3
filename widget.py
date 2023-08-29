@@ -94,6 +94,29 @@ class Widget:
 
         return id
 
+    def find_pos_all_dames(self, color_dame, lst_pos_pn, lst_pos_pb):
+        lst_id_dame = []
+
+        if color_dame == "noir":
+            for val in lst_pos_pn:
+                id_temp = self.find_id(val)
+                if id_temp > 140:
+                    lst_id_dame.append(id_temp)
+                else:
+                    pass
+        if color_dame == "blanc":
+            for val in lst_pos_pb:
+                id_temp = self.find_id(val)
+                if id_temp > 140:
+                    lst_id_dame.append(id_temp)
+                else:
+                    pass
+        else:
+            pass
+
+        return lst_id_dame
+
+
     def find_color(self, id):
         color = ""
 
@@ -149,9 +172,7 @@ class Widget:
 
         """
         if len(lst_case_possible) > 0:
-            self.lst_id_case_jaune = [
-                (self.find_id(val)) for val in lst_case_possible
-            ]
+            self.lst_id_case_jaune = [(self.find_id(val)) for val in lst_case_possible]
 
         else:
             pass

@@ -10,7 +10,6 @@ from fonctions import (
 
 class Deplacement:
     def __init__(self, pion_select, color_pion, lst_case_vide, pos_pn, pos_pb):
-        
         self.pion = pion_select
         self.color_pion = color_pion
         self.lst_casevide = lst_case_vide

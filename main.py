@@ -7,11 +7,11 @@ from fonctions import (
 )
 from solution_depl import Move
 from player import Player
-from solution_saut_dame import SautDame
 from widget import Widget
 from sup_pion import SuppPion
 from coord_convert import CoordConvert
-from solution_depl_dame_simple import SolDeplDames
+from solution_depl_dame_base import SolDeplDames
+# from solution_depl_dame import DeplDame
 
 
 class App:
@@ -241,26 +241,12 @@ class App:
                 )
 
                 # On récuprère la lise des deplacements possible
+                print(f"self.lst_case_possible : {self.lst_case_possible}")
+                print(f"lst_pn_sup : {self.lst_pn_sup}")
+                print(f"lst_pb_sup : {self.lst_pb_sup}")
+                #
+                self.widget.color_case_possible(self.lst_case_possible)
 
-                sol = SolDeplDames()
-                sol1 = SautDame()
-                sol2 = sol1.calcul_depl_dame_b_gauche(
-                    self.pos_pion_select,
-                    color_dame,
-                    self.lst_case_vide,
-                    self.widget.lst_pos_pn,
-                    self.widget.lst_pos_pb,
-                )
-
-                print(f"sol2 : {sol2}")
-                # self.lst_case_possible = sol.solution_depl_dame(
-                #     self.pos_pion_select, self.lst_case_vide
-                # )
-                #
-                # print(f"self.lst_case_possible : {self.lst_case_possible}")
-                #
-                # self.widget.color_case_possible(self.lst_case_possible)
-                #
             else:
                 messagebox.showinfo("Erreur", "Ce n'est pas a vous de jouer !!!")
         else:
