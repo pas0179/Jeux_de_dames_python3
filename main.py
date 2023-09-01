@@ -1,17 +1,17 @@
 import tkinter as tk
 from tkinter import messagebox
 
-from fonctions import (
-    convert_coord,
-    convert_dict_lst,
-)
-from solution_depl import Move
-from player import Player
-from widget import Widget
-from sup_pion import SuppPion
 from coord_convert import CoordConvert
-from solution_depl_dame_base import SolDeplDames
-# from solution_depl_dame import DeplDame
+from fonctions import convert_coord, convert_dict_lst
+from player import Player
+from solution_depl import Move
+
+# from solution_depl_dame import DeplDames
+# from solution_depl_dame_base import SolDeplDames
+
+from solution_depl_dame_saut import SautDames
+from sup_pion import SuppPion
+from widget import Widget
 
 
 class App:
@@ -207,7 +207,7 @@ class App:
 
                 """
                 On va jaunir les cases noirs pour voir les solutions
-                avec la méthode color_case_possible dans la class Widget 
+                avec la méthode color_case_possible dans la class Widget
 
                 """
 
@@ -230,7 +230,11 @@ class App:
             )
 
             if player == color_dame:
-                self.widget.can.itemconfigure(self.id, fill="red", outline="red")
+                self.widget.can.itemconfigure(
+                    self.id,
+                    fill="red",
+                    outline="red",
+                )
 
                 # On affecte les coordonnées
                 self.pos_pion_select = (
@@ -240,8 +244,22 @@ class App:
                     int(coord_id[1] + 60),
                 )
 
-                # On récuprère la lise des deplacements possible
-                print(f"self.lst_case_possible : {self.lst_case_possible}")
+                # On récuprère la lise des deplacements possibles
+                sol = SautDames(
+                    self.pos_pion_select,
+                    color_dame,
+                    self.lst_case_vide,
+                    self.widget.lst_pos_pn,
+                    self.widget.lst_pos_pb,
+                )
+
+                (
+                    self.lst_case_possible,
+                    self.lst_pn_sup,
+                    self.lst_pb_sup,
+                ) = sol.find_autre_saut()
+
+                # print(f"lst_case_possible : {self.lst_case_possible}")
                 print(f"lst_pn_sup : {self.lst_pn_sup}")
                 print(f"lst_pb_sup : {self.lst_pb_sup}")
                 #
@@ -296,7 +314,6 @@ class App:
                     - On relance la fonction de restauration des cases noirs
 
                     """
-
                     self.widget.restor_pion_ou_dame(self.id, color_pion)
 
                     self.widget.restor_case_noir()
@@ -336,9 +353,9 @@ class App:
                             )
                         )
 
-                        """ 
-                        Verification si le pion est sur une case pour 
-                        creation d'une dame 
+                        """
+                        Verification si le pion est sur une case pour
+                        creation d'une dame
                         """
                         self.verif_creation_dame(self.id, coord_release)
 
@@ -361,8 +378,8 @@ class App:
                         # le supprimer de la liste des pion noir ou blanc
                         """"
                         Appel a la class SuppPion du fichier 'supp_pion.py'
-                        pour supprimer les pions sautés 
-                           
+                        pour supprimer les pions sautés
+
                         """
                         sup_pion = SuppPion(
                             self.id,
@@ -377,15 +394,15 @@ class App:
                         """ Récuperation de la liste des pions a supprimer """
                         lst_pion_sup = sup_pion.sup_pion()
 
-                        """ 
-                        Suppression des pions sautés avec la methode sup_pion 
-                        de la class Widget 
+                        """
+                        Suppression des pions sautés avec la methode sup_pion
+                        de la class Widget
 
                         """
                         self.widget.sup_pion(self.id, lst_pion_sup)
 
-                        """ 
-                        Mise a jour des la liste des cases vides 
+                        """
+                        Mise a jour des la liste des cases vides
                         """
                         self.lst_case_vide = self.widget.maj_lst_case_vide()
 
@@ -404,8 +421,8 @@ class App:
                         self.verif_creation_dame(self.id, coord_release)
 
                         """
-                        Mise a jour de la liste des cases vides au cas ou une dame 
-                        serait créer
+                        Mise a jour de la liste des cases vides au cas ou une
+                        dame serait créer
                         """
                         self.lst_case_vide = self.widget.maj_lst_case_vide()
 

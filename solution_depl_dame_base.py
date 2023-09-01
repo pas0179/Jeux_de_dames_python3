@@ -24,187 +24,240 @@ from fonctions import (
 
 
 class SolDeplDames:
-    def __init__(self):
+    def __init__(self, color_dame, lst_case_vide, lst_pos_pn, lst_pos_pb):
+
+        self.color_dame = color_dame
+        self.lst_case_vide = lst_case_vide
+        self.lst_pos_pn = lst_pos_pn
+        self.lst_pos_pb = lst_pos_pb
+
         self.lst_depl = []
+        self.dict_saut = {}
+        self.new_pos = {}
 
-    def solution_depl_dame_b_gauche(
-        self, pos_dame, color_dame, lst_case_vide, lst_pos_pn, lst_pos_pb
-    ):
-        """dame depl_b_g : depl_b_d et depl_h_g"""
 
-        lst_depl_b_gauche = []
+
+
+    """
+    Methode calcul des solutions de deplacements Bas Gauche
+    pour une dame noire ou blanche,  
+    - depl_bas gauche : depl_bas droit et depl_haut gauche    
+    """
+    def solution_depl_dame_b_gauche(self, position):
+        lst_depl = []
         pn_sup, pb_sup = [], []
         lst_pn_sup, lst_pb_sup = [], []
+        new_pos_saut = []
 
-        while len(pos_dame) > 0:
+        """ Initialisation de la position de la dame sélectionnée """
+        new_pos = position
+
+        """ Boucle pour créer la liste des deplacements possibles
+        sur la même diagonale """
+        while len(new_pos) > 0:
             depl_temp = ()
 
-            """ Methode pour le deplacement simple de la dame """
-            depl_temp = depl_pion_bas_gauche(pos_dame)
+            """ fonction de deplacement d'une case en diagonale """
+            depl_temp = depl_pion_bas_gauche(new_pos)
 
-            if len(depl_temp) > 0 and depl_temp in lst_case_vide:
-                lst_depl_b_gauche.append(depl_temp)
+            """
+            Si la case est vide :
+            - ajout dans la liste des deplacements
+            """
+            if len(depl_temp) > 0 and depl_temp in self.lst_case_vide:
+                lst_depl.append(depl_temp)
 
-                pos_dame = depl_temp
+                new_pos = depl_temp
 
             else:
-                """Methode pour le saut sur la même diagonale"""
+                """Si la case n'est pas vide :
+                - lancement fonction saut_bas_g"""
                 saut_temp, pn_sup, pb_sup = saut_bas_g(
-                    pos_dame,
-                    color_dame,
-                    lst_case_vide,
-                    lst_pos_pn,
-                    lst_pos_pb,
+                    new_pos,
+                    self.color_dame,
+                    self.lst_case_vide,
+                    self.lst_pos_pn,
+                    self.lst_pos_pb,
                 )
 
                 if len(saut_temp) > 0:
-                    """Saut sur la meme diagonale"""
+                    """Saut possible sur la meme diagonale"""
+                    new_pos_saut.append(saut_temp)
                     if len(pn_sup) > 0:
-                        lst_depl_b_gauche.append(pn_sup)
                         lst_pn_sup.append(pn_sup)
-                    if len(pb_sup) > 0:
-                        lst_depl_b_gauche.append(pb_sup)
+                        lst_depl.append(pn_sup)
+                    elif len(pb_sup) > 0:
                         lst_pb_sup.append(pb_sup)
+                        lst_depl.append(pb_sup)
                     else:
                         pass
 
-                    lst_depl_b_gauche.append(saut_temp)
-
-                    pos_dame = saut_temp
+                    """ Ajout dans la liste des depl """
+                    lst_depl.append(saut_temp)
+                    new_pos = saut_temp
 
                 else:
-                    pos_dame = ()
+                    """Saut ou deplacement impossible"""
+                    new_pos = ()
 
-        return lst_depl_b_gauche, lst_pn_sup, lst_pb_sup
+        return lst_depl, lst_pn_sup, lst_pb_sup
 
-    def solution_depl_dame_b_droit(
-        self, pos_dame, color_dame, lst_case_vide, lst_pos_pn, lst_pos_pb
-    ):
-        lst_depl_b_droit = []
+    def solution_depl_dame_b_droit(self, position):
+        lst_depl = []
         pn_sup, pb_sup = [], []
         lst_pn_sup, lst_pb_sup = [], []
+        new_pos_saut = []
 
-        while len(pos_dame) > 0:
+        new_pos = position
+
+        while len(new_pos) > 0:
             depl_temp = ()
-            depl_temp = depl_pion_bas_droit(pos_dame)
+            depl_temp = depl_pion_bas_droit(new_pos)
 
-            if len(depl_temp) > 0 and depl_temp in lst_case_vide:
-                lst_depl_b_droit.append(depl_temp)
+            if len(depl_temp) > 0 and depl_temp in self.lst_case_vide:
+                lst_depl.append(depl_temp)
 
-                pos_dame = depl_temp
+                new_pos = depl_temp
 
             else:
                 saut_temp, pn_sup, pb_sup = saut_bas_d(
-                    pos_dame,
-                    color_dame,
-                    lst_case_vide,
-                    lst_pos_pn,
-                    lst_pos_pb,
+                    new_pos,
+                    self.color_dame,
+                    self.lst_case_vide,
+                    self.lst_pos_pn,
+                    self.lst_pos_pb,
                 )
 
                 if len(saut_temp) > 0:
+                    new_pos_saut.append(saut_temp)
+
                     if len(pn_sup) > 0:
-                        lst_depl_b_droit.append(pn_sup)
                         lst_pn_sup.append(pn_sup)
+                        lst_depl.append(pn_sup)
                     if len(pb_sup) > 0:
-                        lst_depl_b_droit.append(pb_sup)
                         lst_pb_sup.append(pb_sup)
+                        lst_depl.append(pb_sup)
                     else:
                         pass
 
-                    lst_depl_b_droit.append(saut_temp)
+                    lst_depl.append(saut_temp)
 
-                    pos_dame = saut_temp
+                    new_pos = saut_temp
 
                 else:
-                    pos_dame = ()
+                    new_pos = ()
 
-        return lst_depl_b_droit, lst_pn_sup, lst_pb_sup
+        return lst_depl, lst_pn_sup, lst_pb_sup
 
-    def solution_depl_dame_h_gauche(
-        self, pos_dame, color_dame, lst_case_vide, lst_pos_pn, lst_pos_pb
-    ):
-        lst_depl_h_gauche = []
+    def solution_depl_dame_h_gauche(self, position):
+        lst_depl = []
         pn_sup, pb_sup = [], []
         lst_pn_sup, lst_pb_sup = [], []
+        new_pos_saut = []
 
-        while len(pos_dame) > 0:
+        new_pos = position
+
+        while len(new_pos) > 0:
             depl_temp = ()
-            depl_temp = depl_pion_haut_gauche(pos_dame)
+            depl_temp = depl_pion_haut_gauche(new_pos)
 
-            if len(depl_temp) > 0 and depl_temp in lst_case_vide:
-                lst_depl_h_gauche.append(depl_temp)
+            if len(depl_temp) > 0 and depl_temp in self.lst_case_vide:
+                lst_depl.append(depl_temp)
 
-                pos_dame = depl_temp
+                new_pos = depl_temp
 
             else:
                 saut_temp, pn_sup, pb_sup = saut_haut_g(
-                    pos_dame,
-                    color_dame,
-                    lst_case_vide,
-                    lst_pos_pn,
-                    lst_pos_pb,
+                    new_pos,
+                    self.color_dame,
+                    self.lst_case_vide,
+                    self.lst_pos_pn,
+                    self.lst_pos_pb,
                 )
 
                 if len(saut_temp) > 0:
+                    new_pos_saut.append(saut_temp)
+
                     if len(pn_sup) > 0:
-                        lst_depl_h_gauche.append(pn_sup)
                         lst_pn_sup.append(pn_sup)
+                        lst_depl.append(pn_sup)
                     if len(pb_sup) > 0:
-                        lst_depl_h_gauche.append(pb_sup)
                         lst_pb_sup.append(pb_sup)
+                        lst_depl.append(pb_sup)
                     else:
                         pass
 
-                    lst_depl_h_gauche.append(saut_temp)
+                    lst_depl.append(saut_temp)
 
-                    pos_dame = saut_temp
+                    new_pos = saut_temp
 
                 else:
-                    pos_dame = ()
+                    new_pos = ()
 
-        return lst_depl_h_gauche, lst_pn_sup, lst_pb_sup
+        return lst_depl, lst_pn_sup, lst_pb_sup
 
-    def solution_depl_dame_h_droit(
-        self, pos_dame, color_dame, lst_case_vide, lst_pos_pn, lst_pos_pb
-    ):
-        lst_depl_h_droit = []
+    def solution_depl_dame_h_droit(self, position):
+        lst_depl = []
         pn_sup, pb_sup = [], []
         lst_pn_sup, lst_pb_sup = [], []
+        new_pos_saut = []
 
-        while len(pos_dame) > 0:
+        new_pos = position
+
+        while len(new_pos) > 0:
             depl_temp = ()
-            depl_temp = depl_pion_haut_droit(pos_dame)
+            depl_temp = depl_pion_haut_droit(new_pos)
 
-            if len(depl_temp) > 0 and depl_temp in lst_case_vide:
-                lst_depl_h_droit.append(depl_temp)
+            if len(depl_temp) > 0 and depl_temp in self.lst_case_vide:
+                lst_depl.append(depl_temp)
 
-                pos_dame = depl_temp
+                new_pos = depl_temp
 
             else:
                 saut_temp, pn_sup, pb_sup = saut_haut_d(
-                    pos_dame,
-                    color_dame,
-                    lst_case_vide,
-                    lst_pos_pn,
-                    lst_pos_pb,
+                    new_pos,
+                    self.color_dame,
+                    self.lst_case_vide,
+                    self.lst_pos_pn,
+                    self.lst_pos_pb,
                 )
 
                 if len(saut_temp) > 0:
+                    new_pos_saut.append(saut_temp)
+
                     if len(pn_sup) > 0:
-                        lst_depl_h_droit.append(pn_sup)
                         lst_pn_sup.append(pn_sup)
+                        lst_depl.append(pn_sup)
                     if len(pb_sup) > 0:
-                        lst_depl_h_droit.append(pb_sup)
                         lst_pb_sup.append(pb_sup)
+                        lst_depl.append(pb_sup)
                     else:
                         pass
 
-                    lst_depl_h_droit.append(saut_temp)
+                    lst_depl.append(saut_temp)
 
-                    pos_dame = saut_temp
+                    new_pos = saut_temp
 
                 else:
-                    pos_dame = ()
+                    new_pos = ()
 
-        return lst_depl_h_droit, lst_pn_sup, lst_pb_sup
+        return lst_depl, lst_pn_sup, lst_pb_sup
+
+    """ Methode pour test dans __main__ """
+
+    def deplacements(self, position):
+
+        deplbg, pn_supbg, pb_supbg = self.solution_depl_dame_b_gauche(position)
+
+        deplbd, pn_supbd, pb_supbd = self.solution_depl_dame_b_droit(position)
+
+        deplhg, pn_suphg, pb_suphg = self.solution_depl_dame_h_gauche(position)
+
+        deplhd, pn_suphd, pb_suphd = self.solution_depl_dame_h_droit(position)
+
+        depl = [*deplbg, *deplbd, *deplhg, *deplhd]
+        pn_sup = [*pn_supbg, *pn_supbd, *pn_suphg, *pn_suphd]
+        pb_sup = [*pb_supbg, *pb_supbd, *pb_suphg, *pb_suphd]
+
+        return depl, pn_sup, pb_sup
+
