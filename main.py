@@ -252,12 +252,9 @@ class App:
                     self.widget.lst_pos_pn,
                     self.widget.lst_pos_pb,
                 )
-
-                (
-                    self.lst_case_possible,
-                    self.lst_pn_sup,
-                    self.lst_pb_sup,
-                ) = sol.find_autre_saut()
+                self.lst_case_possible = sol.lst_depl
+                self.lst_pn_sup = sol.lst_pn_sup
+                self.lst_pb_sup = sol.lst_pb_sup                
 
                 # print(f"lst_case_possible : {self.lst_case_possible}")
                 print(f"lst_pn_sup : {self.lst_pn_sup}")

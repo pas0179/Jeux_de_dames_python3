@@ -25,7 +25,6 @@ from fonctions import (
 
 class SolDeplDames:
     def __init__(self, color_dame, lst_case_vide, lst_pos_pn, lst_pos_pb):
-
         self.color_dame = color_dame
         self.lst_case_vide = lst_case_vide
         self.lst_pos_pn = lst_pos_pn
@@ -35,14 +34,12 @@ class SolDeplDames:
         self.dict_saut = {}
         self.new_pos = {}
 
-
-
-
     """
     Methode calcul des solutions de deplacements Bas Gauche
     pour une dame noire ou blanche,  
     - depl_bas gauche : depl_bas droit et depl_haut gauche    
     """
+
     def solution_depl_dame_b_gauche(self, position):
         lst_depl = []
         pn_sup, pb_sup = [], []
@@ -246,7 +243,6 @@ class SolDeplDames:
     """ Methode pour test dans __main__ """
 
     def deplacements(self, position):
-
         deplbg, pn_supbg, pb_supbg = self.solution_depl_dame_b_gauche(position)
 
         deplbd, pn_supbd, pb_supbd = self.solution_depl_dame_b_droit(position)
@@ -260,4 +256,3 @@ class SolDeplDames:
         pb_sup = [*pb_supbg, *pb_supbd, *pb_suphg, *pb_suphd]
 
         return depl, pn_sup, pb_sup
-
