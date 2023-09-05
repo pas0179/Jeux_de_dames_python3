@@ -1,11 +1,13 @@
 """
-Class pour gerer les sauts possibles d'une dame 
+Class pour gerer les sauts possibles d'une dame
 noir ou blanc
 
 """
 
 from solution_depl_dame_base import SolDeplDames
 from fonctions import convert_dict_lst
+
+
 
 
 class SautDames:
@@ -148,7 +150,7 @@ class SautDames:
 
     """
     Methode:
-    - Création dictionnaire si saut 
+    - Création dictionnaire si saut
     - Création liste si deplacement simple en diagonale
     """
 
@@ -215,7 +217,7 @@ class SautDames:
                                 lst_pn_sup.extend(pn_sup_temp)
 
                             """ Ajout a la liste pour recherche nouveau saut """
-                            lst_new_pos_saut.append(lst_new_pos_temp)
+                            lst_new_pos_saut.extend(lst_new_pos_temp)
 
                         else:
                             pass
@@ -249,7 +251,7 @@ class SautDames:
                             else:
                                 lst_pn_sup.extend(pn_sup_temp)
 
-                            lst_new_pos_saut.append(lst_new_pos_temp)
+                            lst_new_pos_saut.extend(lst_new_pos_temp)
                         else:
                             pass
                     else:
@@ -306,7 +308,7 @@ class SautDames:
                             else:
                                 lst_pn_sup.extend(pn_sup_temp)
 
-                            lst_new_pos_saut.append(lst_new_pos_temp)
+                            lst_new_pos_saut.extend(lst_new_pos_temp)
 
                         else:
                             pass
@@ -340,7 +342,7 @@ class SautDames:
                             else:
                                 lst_pn_sup.extend(pn_sup_temp)
 
-                            lst_new_pos_saut.append(lst_new_pos_temp)
+                            lst_new_pos_saut.extend(lst_new_pos_temp)
 
                         else:
                             pass
@@ -403,7 +405,7 @@ class SautDames:
                             else:
                                 lst_pn_sup.extend(pn_sup_temp)
 
-                            lst_new_pos_saut.append(lst_new_pos_temp)
+                            lst_new_pos_saut.extend(lst_new_pos_temp)
 
                         else:
                             pass
@@ -437,7 +439,7 @@ class SautDames:
                             else:
                                 lst_pn_sup.extend(pn_sup_temp)
 
-                            lst_new_pos_saut.append(lst_new_pos_temp)
+                            lst_new_pos_saut.extend(lst_new_pos_temp)
 
                         else:
                             pass
@@ -500,7 +502,7 @@ class SautDames:
                             else:
                                 lst_pn_sup.extend(pn_sup_temp)
 
-                            lst_new_pos_saut.append(lst_new_pos_temp)
+                            lst_new_pos_saut.extend(lst_new_pos_temp)
 
                         else:
                             pass
@@ -535,7 +537,7 @@ class SautDames:
                             else:
                                 lst_pn_sup.extend(pn_sup_temp)
 
-                            lst_new_pos_saut.append(lst_new_pos_temp)
+                            lst_new_pos_saut.extend(lst_new_pos_temp)
                         else:
                             pass
                     else:
@@ -559,12 +561,45 @@ class SautDames:
         """Appel de la methode saut_depl_possible pour recupérer
         les possibilités saut ou deplacements"""
 
+        dict_temp = {}
+        new_pos_temp = []
+
         position = self.pos_dame
 
         dict_saut, new_pos, lst_depl, pn_sup, pb_sup = self.saut_depl_possible(position)
 
+        if len(dict_saut) > 0 and len(new_pos) > 0:
+            for pos in new_pos:
+                (
+                    dict_saut_temp,
+                    pos_temp,
+                    _,
+                    pn_sup_temp,
+                    pb_sup_temp,
+                ) = self.saut_depl_possible(
+                    pos,
+                )
+
+                if len(dict_saut_temp) > 0:
+                    dict_temp.update(dict_saut_temp)
+                    new_pos_temp.append(pos_temp)
+
+                    if len(pn_sup_temp) > 0:
+                        pn_sup.extend(pn_sup_temp)
+                    if len(pb_sup_temp) > 0:
+                        pb_sup.extend(pb_sup_temp)
+                    else:
+                        pass
+                else:
+                    pass
+        else:
+            pass
+
+
         self.dict_saut = dict_saut
         print(f"self.dict_saut : {self.dict_saut}")
+        print(f"dict_temp : {dict_temp}")
+
         self.new_pos = new_pos
         print(f"self.new_pos : {self.new_pos}")
 

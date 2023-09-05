@@ -4,7 +4,6 @@
 """
 
 from fonctions import (
-    # ident_pion_noir_blanc,
     saut_bas_d,
     saut_bas_g,
     saut_haut_d,
@@ -63,7 +62,6 @@ class Sauts:
         )
 
         if len(saut1) > 0 and saut1 != oldpos:
-            # print(f"saut1: {saut1}, oldpos: {oldpos}")
             self.compteur += 1
             dict_saut[self.sol + str(self.compteur)] = [pos_pion, saut1]
             if color_pion == "noir":
@@ -72,7 +70,6 @@ class Sauts:
                 lst_pn_sup.append(pnsup1)
 
         if len(saut2) > 0 and saut2 != oldpos:
-            # print(f"saut2: {saut2}, oldpos: {oldpos}")
             self.compteur += 1
             dict_saut[self.sol + str(self.compteur)] = [pos_pion, saut2]
             if color_pion == "noir":
@@ -81,7 +78,6 @@ class Sauts:
                 lst_pn_sup.append(pnsup2)
 
         if len(saut3) > 0 and saut3 != oldpos:
-            # print(f"saut3: {saut3}, oldpos: {oldpos}")
             self.compteur += 1
             dict_saut[self.sol + str(self.compteur)] = [pos_pion, saut3]
             if color_pion == "noir":
@@ -90,7 +86,6 @@ class Sauts:
                 lst_pn_sup.append(pnsup3)
 
         if len(saut4) > 0 and saut4 != oldpos:
-            # print(f"saut4: {saut4}, oldpos: {oldpos}")
             self.compteur += 1
             dict_saut[self.sol + str(self.compteur)] = [pos_pion, saut4]
             if color_pion == "noir":
@@ -111,12 +106,10 @@ class Sauts:
         lst_last_pos = []
 
         # Récup des dernieres positions dans le dictionnaire
-
         lst_last_pos = [(val[-2], val[-1]) for val in dict_temp.values()]
 
         # Nettoyage des doublons dans la liste
         lst_temp1 = []
-
         lst_temp1 = [val for val in lst_last_pos if val not in lst_temp1]
 
         if len(lst_temp1) > 0:
@@ -132,7 +125,6 @@ class Sauts:
 
     def maj_nb_solutions_dict(self, dict_1):
         dict_temp = {}
-
         compteur = 1
 
         for val in dict_1.values():
@@ -151,11 +143,8 @@ class Sauts:
         lg2 = len(dict_2)
         dict_fusion = {}
 
-        # dict_temp = {}
-
         # On commence par re_numeroté les solutions de dict_saut
         dict_2 = self.maj_nb_solutions_dict(dict_2)
-        # print(dict_2)
 
         if lg2 > 0 and lg2 > lg1:
             for key, val in dict_2.items():
@@ -165,7 +154,6 @@ class Sauts:
                     else:
                         continue
 
-            # print(f"dict temp fusion: {dict_2}")
             dict_fusion = dict_2
 
         elif lg1 >= lg2:
@@ -175,9 +163,8 @@ class Sauts:
                         dict_1[key].append(v[-1])
                     else:
                         continue
-            # print(f"dict temp fusion: {dict_1}")
-            dict_fusion = dict_1
 
+            dict_fusion = dict_1
         else:
             pass
 
@@ -225,7 +212,6 @@ class Sauts:
                             self.lst_pb_sup.append(newpos)
                     else:
                         pass
-
                 else:
                     continue
 
