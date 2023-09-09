@@ -1,14 +1,10 @@
 """
-    class pour trouver les solutions de deplacement des dames blanches 
-    ou noires avec saut ou pas. Le calcul se fait sur les diagonales 
-    suivant la position de la dame.
-
+class pour trouver les solutions de deplacement des dames blanches
+ou noires avec saut ou pas. Le calcul se fait sur les diagonales
+suivant la position de la dame.
 Solutions pour une dame :
-
 dame depl_h_d et depl_b_g : depl_b_d et depl_h_g
 dame depl_h_g et depl_b_d : depl_b_g et depl_h_d
-
-
 """
 
 from fonctions import (
@@ -24,6 +20,7 @@ from fonctions import (
 
 
 class SolDeplDames:
+    """Class pour trouver les solutions de deplacement des dames"""
     def __init__(self, color_dame, lst_case_vide, lst_pos_pn, lst_pos_pb):
         self.color_dame = color_dame
         self.lst_case_vide = lst_case_vide
@@ -34,41 +31,26 @@ class SolDeplDames:
         self.dict_saut = {}
         self.new_pos = {}
 
-    """
-    Methode calcul des solutions de deplacements Bas Gauche
-    pour une dame noire ou blanche,  
-    - depl_bas gauche : depl_bas droit et depl_haut gauche    
-    """
-
     def solution_depl_dame_b_gauche(self, position):
+        """calcul deplacement diagonale bas gauche"""
         lst_depl = []
         pn_sup, pb_sup = [], []
         lst_pn_sup, lst_pb_sup = [], []
         new_pos_saut = []
 
-        """ Initialisation de la position de la dame sélectionnée """
         new_pos = position
 
-        """ Boucle pour créer la liste des deplacements possibles
-        sur la même diagonale """
         while len(new_pos) > 0:
             depl_temp = ()
 
-            """ fonction de deplacement d'une case en diagonale """
             depl_temp = depl_pion_bas_gauche(new_pos)
 
-            """
-            Si la case est vide :
-            - ajout dans la liste des deplacements
-            """
             if len(depl_temp) > 0 and depl_temp in self.lst_case_vide:
                 lst_depl.append(depl_temp)
 
                 new_pos = depl_temp
 
             else:
-                """Si la case n'est pas vide :
-                - lancement fonction saut_bas_g"""
                 saut_temp, pn_sup, pb_sup = saut_bas_g(
                     new_pos,
                     self.color_dame,
@@ -78,7 +60,6 @@ class SolDeplDames:
                 )
 
                 if len(saut_temp) > 0:
-                    """Saut possible sur la meme diagonale"""
                     new_pos_saut.append(saut_temp)
                     if len(pn_sup) > 0:
                         lst_pn_sup.append(pn_sup)
@@ -89,17 +70,16 @@ class SolDeplDames:
                     else:
                         pass
 
-                    """ Ajout dans la liste des depl """
                     lst_depl.append(saut_temp)
                     new_pos = saut_temp
 
                 else:
-                    """Saut ou deplacement impossible"""
                     new_pos = ()
 
         return lst_depl, lst_pn_sup, lst_pb_sup
 
     def solution_depl_dame_b_droit(self, position):
+        """calcul deplacement diagonale bas droite"""
         lst_depl = []
         pn_sup, pb_sup = [], []
         lst_pn_sup, lst_pb_sup = [], []
@@ -147,6 +127,7 @@ class SolDeplDames:
         return lst_depl, lst_pn_sup, lst_pb_sup
 
     def solution_depl_dame_h_gauche(self, position):
+        """calcul deplacement diagonale haut gauche"""
         lst_depl = []
         pn_sup, pb_sup = [], []
         lst_pn_sup, lst_pb_sup = [], []
@@ -194,6 +175,7 @@ class SolDeplDames:
         return lst_depl, lst_pn_sup, lst_pb_sup
 
     def solution_depl_dame_h_droit(self, position):
+        """calcul deplacement diagonale haut droite"""
         lst_depl = []
         pn_sup, pb_sup = [], []
         lst_pn_sup, lst_pb_sup = [], []
@@ -239,20 +221,3 @@ class SolDeplDames:
                     new_pos = ()
 
         return lst_depl, lst_pn_sup, lst_pb_sup
-
-    """ Methode pour test dans __main__ """
-
-    def deplacements(self, position):
-        deplbg, pn_supbg, pb_supbg = self.solution_depl_dame_b_gauche(position)
-
-        deplbd, pn_supbd, pb_supbd = self.solution_depl_dame_b_droit(position)
-
-        deplhg, pn_suphg, pb_suphg = self.solution_depl_dame_h_gauche(position)
-
-        deplhd, pn_suphd, pb_suphd = self.solution_depl_dame_h_droit(position)
-
-        depl = [*deplbg, *deplbd, *deplhg, *deplhd]
-        pn_sup = [*pn_supbg, *pn_supbd, *pn_suphg, *pn_suphd]
-        pb_sup = [*pb_supbg, *pb_supbd, *pb_suphg, *pb_suphd]
-
-        return depl, pn_sup, pb_sup

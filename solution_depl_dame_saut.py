@@ -110,108 +110,370 @@ class SautDames:
 
         return lst_temp
 
-    def saut_depl_possible(self, position):
-        """Methode:
-        - Création dictionnaire si saut
-        - Création liste si deplacement simple en diagonale"""
-
+    def find_sol_saut_b_gauche(self, position):
+        """Recherche si saut possible de diagonale bas gauche"""
         dict_saut = {}
+        lst_new_pos = []
         lst_depl = []
+        lst_pn_sup = []
+        lst_pb_sup = []
 
-        lst_new_pos_saut = []
+        depl, pn_sup, pb_sup = self.depl.solution_depl_dame_b_gauche(position)
 
+        if len(depl) > 0:
+            new_pos = self.find_saut(depl, pn_sup, pb_sup)
+            depl_temp = self.nettoyage_depl(depl, pn_sup, pb_sup)
+
+            if len(new_pos) > 0:
+                self.cpt += 1
+                dict_saut[self.sol + str(self.cpt)] = [position, *depl_temp]
+                lst_new_pos.extend(new_pos)
+
+                if self.color_dame == "noir":
+                    lst_pb_sup.extend(pb_sup)
+                else:
+                    lst_pn_sup.extend(pn_sup)
+            else:
+                lst_depl = depl
+        else:
+            pass
+
+        return dict_saut, lst_new_pos, lst_depl, lst_pn_sup, lst_pb_sup
+
+    def find_sol_saut_b_droit(self, position):
+        """Recherche si saut possible de diagonale bas droite"""
+        dict_saut = {}
+        lst_new_pos = []
+        lst_depl = []
+        lst_pn_sup = []
+        lst_pb_sup = []
+
+        depl, pn_sup, pb_sup = self.depl.solution_depl_dame_b_droit(position)
+
+        if len(depl) > 0:
+            new_pos = self.find_saut(depl, pn_sup, pb_sup)
+            depl_temp = self.nettoyage_depl(depl, pn_sup, pb_sup)
+
+            if len(new_pos) > 0:
+                self.cpt += 1
+                dict_saut[self.sol + str(self.cpt)] = [position, *depl_temp]
+                lst_new_pos.extend(new_pos)
+
+                if self.color_dame == "noir":
+                    lst_pb_sup.extend(pb_sup)
+                else:
+                    lst_pn_sup.extend(pn_sup)
+            else:
+                lst_depl = depl
+        else:
+            pass
+
+        return dict_saut, lst_new_pos, lst_depl, lst_pn_sup, lst_pb_sup
+
+    def find_sol_saut_h_gauche(self, position):
+        """Recherche si saut possible de diagonale haut gauche"""
+        dict_saut = {}
+        lst_new_pos = []
+        lst_depl = []
+        lst_pn_sup = []
+        lst_pb_sup = []
+
+        depl, pn_sup, pb_sup = self.depl.solution_depl_dame_h_gauche(position)
+
+        if len(depl) > 0:
+            new_pos = self.find_saut(depl, pn_sup, pb_sup)
+            depl_temp = self.nettoyage_depl(depl, pn_sup, pb_sup)
+
+            if len(new_pos) > 0:
+                self.cpt += 1
+                dict_saut[self.sol + str(self.cpt)] = [position, *depl_temp]
+                lst_new_pos.extend(new_pos)
+
+                if self.color_dame == "noir":
+                    lst_pb_sup.extend(pb_sup)
+                else:
+                    lst_pn_sup.extend(pn_sup)
+            else:
+                lst_depl = depl
+        else:
+            pass
+
+        return dict_saut, lst_new_pos, lst_depl, lst_pn_sup, lst_pb_sup
+
+    def find_sol_saut_h_droit(self, position):
+        """Recherche si saut possible de diagonale haut droite"""
+        dict_saut = {}
+        lst_new_pos = []
+        lst_depl = []
+        lst_pn_sup = []
+        lst_pb_sup = []
+
+        depl, pn_sup, pb_sup = self.depl.solution_depl_dame_h_droit(position)
+
+        if len(depl) > 0:
+            new_pos = self.find_saut(depl, pn_sup, pb_sup)
+            depl_temp = self.nettoyage_depl(depl, pn_sup, pb_sup)
+
+            if len(new_pos) > 0:
+                self.cpt += 1
+                dict_saut[self.sol + str(self.cpt)] = [position, *depl_temp]
+                lst_new_pos.extend(new_pos)
+
+                if self.color_dame == "noir":
+                    lst_pb_sup.extend(pb_sup)
+                else:
+                    lst_pn_sup.extend(pn_sup)
+            else:
+                lst_depl = depl
+        else:
+            pass
+
+        return dict_saut, lst_new_pos, lst_depl, lst_pn_sup, lst_pb_sup
+
+    def fusion_dict_saut(self, dict_saut, dict_saut2):
+        """Fusion de 2 dictionnaires en un seul dictionnaires"""
+        cpt = 0
+        lg_dict = len(dict_saut)
+
+        for val in dict_saut2.values():
+            cpt += 1
+            dict_saut[self.sol + str(cpt+lg_dict)] = val
+
+        return dict_saut
+
+    def fusion_lst(self, lst_new_pos, lst_new_pos2):
+        """Fusion de 2 listes de nouvelles positions"""
+        lst_new_pos.extend(lst_new_pos2)
+        return lst_new_pos
+
+    def find_sol_saut_bas(self, position):
+        """Appel des 2 methodes diagonales bas gauche et droite
+        pour recherche des saut possibles"""
+        dict_saut = {}
+        lst_new_pos = []
+        lst_depl = []
         lst_pn_sup = []
         lst_pb_sup = []
 
         (
-            deplbg,
-            pn_supbg,
-            pb_supbg,
-        ) = self.depl.solution_depl_dame_b_gauche(position)
+            dict_saut,
+            lst_new_pos,
+            lst_depl,
+            lst_pn_sup,
+            lst_pb_sup,
+        ) = self.find_sol_saut_b_gauche(
+            position,
+        )
 
         (
-            deplbd,
-            pn_supbd,
-            pb_supbd,
-        ) = self.depl.solution_depl_dame_b_droit(position)
+            dict_saut2,
+            lst_new_pos2,
+            lst_depl2,
+            lst_pn_sup2,
+            lst_pb_sup2,
+        ) = self.find_sol_saut_b_droit(
+            position,
+        )
+
+        dict_saut = self.fusion_dict_saut(dict_saut, dict_saut2)
+        lst_new_pos = self.fusion_lst(
+            lst_new_pos, lst_new_pos2,
+        )
+        lst_depl = self.fusion_lst(lst_depl, lst_depl2)
+        lst_pn_sup = self.fusion_lst(
+            lst_pn_sup, lst_pn_sup2
+        )
+        lst_pb_sup = self.fusion_lst(
+            lst_pb_sup, lst_pb_sup2,
+        )
+
+        return dict_saut, lst_new_pos, lst_depl, lst_pn_sup, lst_pb_sup
+
+    def find_sol_saut_haut(self, position):
+        """Appel des 2 methodes diagonales haut gauche et droite
+        pour recherche des saut possibles"""
+        dict_saut = {}
+        lst_new_pos = []
+        lst_depl = []
+        lst_pn_sup = []
+        lst_pb_sup = []
 
         (
-            deplhg,
-            pn_suphg,
-            pb_suphg,
-        ) = self.depl.solution_depl_dame_h_gauche(position)
+            dict_saut,
+            lst_new_pos,
+            lst_depl,
+            lst_pn_sup,
+            lst_pb_sup,
+        ) = self.find_sol_saut_h_gauche(
+            position,
+        )
 
         (
-            deplhd,
-            pn_suphd,
-            pb_suphd,
-        ) = self.depl.solution_depl_dame_h_droit(position)
+            dict_saut2,
+            lst_new_pos2,
+            lst_depl2,
+            lst_pn_sup2,
+            lst_pb_sup2,
+        ) = self.find_sol_saut_h_droit(
+            position,
+        )
 
-        if len(deplbg) > 0:
-            lst_new_pos = self.find_saut(deplbg, pn_supbg, pb_supbg)
-            depl = self.nettoyage_depl(deplbg, pn_supbg, pb_supbg)
+        dict_saut = self.fusion_dict_saut(dict_saut, dict_saut2)
+        lst_new_pos = self.fusion_lst(
+            lst_new_pos, lst_new_pos2,
+        )
+        lst_depl = self.fusion_lst(lst_depl, lst_depl2)
+        lst_pn_sup = self.fusion_lst(
+            lst_pn_sup, lst_pn_sup2
+        )
+        lst_pb_sup = self.fusion_lst(
+            lst_pb_sup, lst_pb_sup2,
+        )
 
-            if len(lst_new_pos) > 0:
-                self.cpt += 1
-                dict_saut[self.sol + str(self.cpt)] = [position, *depl]
-                lst_new_pos_saut.extend(lst_new_pos)
+        return dict_saut, lst_new_pos, lst_depl, lst_pn_sup, lst_pb_sup
 
-                if self.color_dame == "noir":
-                    lst_pb_sup.extend(pb_supbg)
-                else:
-                    lst_pn_sup.extend(pn_supbg)
-            else:
-                lst_depl.extend(depl)
+    def find_depl_saut(self, position):
+        """Methode pour trouver les sauts possibles
+        sur les 4 diagonales"""
 
-        if len(deplbd) > 0:
-            lst_new_pos = self.find_saut(deplbd, pn_supbd, pb_supbd)
-            depl = self.nettoyage_depl(deplbd, pn_supbd, pb_supbd)
+        dict_saut = {}
+        lst_new_pos = []
+        lst_depl = []
+        lst_pn_sup = []
+        lst_pb_sup = []
 
-            if len(lst_new_pos) > 0:
-                self.cpt += 1
-                dict_saut[self.sol + str(self.cpt)] = [position, *depl]
-                lst_new_pos_saut.extend(lst_new_pos)
+        (
+            dict_saut,
+            lst_new_pos,
+            lst_depl,
+            lst_pn_sup,
+            lst_pb_sup,
+        ) = self.find_sol_saut_bas(position)
 
-                if self.color_dame == "noir":
-                    lst_pb_sup.extend(pb_supbd)
-                else:
-                    lst_pn_sup.extend(pn_supbd)
-            else:
-                lst_depl.extend(depl)
+        (
+            dict_saut2,
+            lst_new_pos2,
+            lst_depl2,
+            lst_pn_sup2,
+            lst_pb_sup2,
+        ) = self.find_sol_saut_haut(position)
 
-        if len(deplhg) > 0:
-            lst_new_pos = self.find_saut(deplhg, pn_suphg, pb_suphg)
-            depl = self.nettoyage_depl(deplhg, pn_suphg, pb_suphg)
+        dict_saut = self.fusion_dict_saut(dict_saut, dict_saut2)
+        lst_new_pos = self.fusion_lst(
+            lst_new_pos, lst_new_pos2,
+        )
+        lst_depl = self.fusion_lst(lst_depl, lst_depl2)
+        lst_pn_sup = self.fusion_lst(
+            lst_pn_sup, lst_pn_sup2,
+        )
+        lst_pb_sup = self.fusion_lst(
+            lst_pb_sup, lst_pb_sup2,
+        )
 
-            if len(lst_new_pos) > 0:
-                self.cpt += 1
-                dict_saut[self.sol + str(self.cpt)] = [position, *depl]
-                lst_new_pos_saut.extend(lst_new_pos)
+        return dict_saut, lst_new_pos, lst_depl, lst_pn_sup, lst_pb_sup
 
-                if self.color_dame == "noir":
-                    lst_pb_sup.extend(pb_suphg)
-                else:
-                    lst_pn_sup.extend(pn_suphg)
-            else:
-                lst_depl.extend(depl)
-
-        if len(deplhd) > 0:
-            lst_new_pos = self.find_saut(deplhd, pn_suphd, pb_suphd)
-            depl = self.nettoyage_depl(deplhd, pn_suphd, pb_suphd)
-
-            if len(lst_new_pos) > 0:
-                self.cpt += 1
-                dict_saut[self.sol + str(self.cpt)] = [position, *depl]
-                lst_new_pos_saut.extend(lst_new_pos)
-
-                if self.color_dame == "noir":
-                    lst_pb_sup.extend(pb_suphd)
-                else:
-                    lst_pn_sup.extend(pn_suphd)
-            else:
-                lst_depl.extend(depl)
-
-        return dict_saut, lst_new_pos_saut, lst_depl, lst_pn_sup, lst_pb_sup
+    # def saut_depl_possible(self, position):
+    #     """Methode:
+    #     - Création dictionnaire si saut
+    #     - Création liste si deplacement simple en diagonale"""
+    #
+    #     dict_saut = {}
+    #     lst_depl = []
+    #
+    #     lst_new_pos_saut = []
+    #
+    #     lst_pn_sup = []
+    #     lst_pb_sup = []
+    #
+    #     (
+    #         deplbg,
+    #         pn_supbg,
+    #         pb_supbg,
+    #     ) = self.depl.solution_depl_dame_b_gauche(position)
+    #
+    #     (
+    #         deplbd,
+    #         pn_supbd,
+    #         pb_supbd,
+    #     ) = self.depl.solution_depl_dame_b_droit(position)
+    #
+    #     (
+    #         deplhg,
+    #         pn_suphg,
+    #         pb_suphg,
+    #     ) = self.depl.solution_depl_dame_h_gauche(position)
+    #
+    #     (
+    #         deplhd,
+    #         pn_suphd,
+    #         pb_suphd,
+    #     ) = self.depl.solution_depl_dame_h_droit(position)
+    #
+    #     if len(deplbg) > 0:
+    #         lst_new_pos = self.find_saut(deplbg, pn_supbg, pb_supbg)
+    #         depl = self.nettoyage_depl(deplbg, pn_supbg, pb_supbg)
+    #
+    #         if len(lst_new_pos) > 0:
+    #             self.cpt += 1
+    #             dict_saut[self.sol + str(self.cpt)] = [position, *depl]
+    #             lst_new_pos_saut.extend(lst_new_pos)
+    #
+    #             if self.color_dame == "noir":
+    #                 lst_pb_sup.extend(pb_supbg)
+    #             else:
+    #                 lst_pn_sup.extend(pn_supbg)
+    #         else:
+    #             lst_depl.extend(depl)
+    #
+    #     if len(deplbd) > 0:
+    #         lst_new_pos = self.find_saut(deplbd, pn_supbd, pb_supbd)
+    #         depl = self.nettoyage_depl(deplbd, pn_supbd, pb_supbd)
+    #
+    #         if len(lst_new_pos) > 0:
+    #             self.cpt += 1
+    #             dict_saut[self.sol + str(self.cpt)] = [position, *depl]
+    #             lst_new_pos_saut.extend(lst_new_pos)
+    #
+    #             if self.color_dame == "noir":
+    #                 lst_pb_sup.extend(pb_supbd)
+    #             else:
+    #                 lst_pn_sup.extend(pn_supbd)
+    #         else:
+    #             lst_depl.extend(depl)
+    #
+    #     if len(deplhg) > 0:
+    #         lst_new_pos = self.find_saut(deplhg, pn_suphg, pb_suphg)
+    #         depl = self.nettoyage_depl(deplhg, pn_suphg, pb_suphg)
+    #
+    #         if len(lst_new_pos) > 0:
+    #             self.cpt += 1
+    #             dict_saut[self.sol + str(self.cpt)] = [position, *depl]
+    #             lst_new_pos_saut.extend(lst_new_pos)
+    #
+    #             if self.color_dame == "noir":
+    #                 lst_pb_sup.extend(pb_suphg)
+    #             else:
+    #                 lst_pn_sup.extend(pn_suphg)
+    #         else:
+    #             lst_depl.extend(depl)
+    #
+    #     if len(deplhd) > 0:
+    #         lst_new_pos = self.find_saut(deplhd, pn_suphd, pb_suphd)
+    #         depl = self.nettoyage_depl(deplhd, pn_suphd, pb_suphd)
+    #
+    #         if len(lst_new_pos) > 0:
+    #             self.cpt += 1
+    #             dict_saut[self.sol + str(self.cpt)] = [position, *depl]
+    #             lst_new_pos_saut.extend(lst_new_pos)
+    #
+    #             if self.color_dame == "noir":
+    #                 lst_pb_sup.extend(pb_suphd)
+    #             else:
+    #                 lst_pn_sup.extend(pn_suphd)
+    #         else:
+    #             lst_depl.extend(depl)
+    #
+    #     return dict_saut, lst_new_pos_saut, lst_depl, lst_pn_sup, lst_pb_sup
 
     def reverse_dict(self, dict_saut):
         """Création d'un dictionnaire inversé depuis dict_saut"""
@@ -244,11 +506,6 @@ class SautDames:
                 for key, val in dict_saut.items()
                 if val not in dict_t.values() and val not in dict_r.values()
             }
-        #     for key, val in dict_saut.items():
-        #         if val not in dict_t.values() and val not in dict_r.values():
-        #             dict_temp[key] = val
-        #         else:
-        #             pass
         else:
             pass
 
@@ -264,14 +521,31 @@ class SautDames:
                     for val2 in dict2.values():
                         if element == val2[0]:
                             index_el = val.index(element)
-                            lst_temp.append((val[: index_el] + val2))
+                            lst_temp.append((val[:index_el] + val2))
                         else:
                             pass
         else:
             pass
 
         # Création d'un nouveau dictionnaire
-        print(f"lst_temp : {lst_temp}")
+        dict_temp = {}
+        cpt = 0
+
+        for val in lst_temp:
+            cpt += 1
+            dict_temp[self.sol + str(cpt)] = val
+
+        return dict_temp
+
+    def clean_lst(self, lst_1):
+        """Suppression des doublons"""
+        lst_temp = []
+
+        for val in lst_1:
+            if val not in lst_temp:
+                lst_temp.append(val)
+            else:
+                pass
 
         return lst_temp
 
@@ -286,7 +560,7 @@ class SautDames:
 
         position = self.pos_dame
 
-        dict_saut, new_pos, lst_depl, pn_sup, pb_sup = self.saut_depl_possible(
+        dict_saut, new_pos, lst_depl, pn_sup, pb_sup = self.find_depl_saut(
             position,
         )
 
@@ -317,7 +591,7 @@ class SautDames:
                     _,
                     pn_sup2,
                     pb_sup2,
-                ) = self.saut_depl_possible(
+                ) = self.find_depl_saut(
                     pos,
                 )
 
@@ -341,7 +615,7 @@ class SautDames:
                 else:
                     pass
 
-            self.new_pos = new_pos_temp
+            self.new_pos = self.clean_lst(new_pos_temp)
         else:
             pass
 
