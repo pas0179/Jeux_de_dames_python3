@@ -3,12 +3,11 @@
 # au début de la partie
 
 
-
-def ident_pion_noir_blanc(id):
+def ident_pion_noir_blanc(id_pion):
     pion = ""
-    if 100 < id < 121:
+    if 100 < id_pion < 121:
         pion = "noir"
-    elif 120 < id < 141:
+    elif 120 < id_pion < 141:
         pion = "blanc"
     else:
         pass
@@ -28,11 +27,11 @@ def convert_coord(x, y, lst_case_noir):
     return coord
 
 
-def convert_dict_lst(dict, pos_pion):
+def convert_dict_lst(dict_saut, pos_pion):
     lst_case_possible = []
 
-    if len(dict) > 0:
-        for val in dict.values():
+    if len(dict_saut) > 0:
+        for val in dict_saut.values():
             for el in val:
                 lst_case_possible.append(el)
 
@@ -47,7 +46,6 @@ def convert_dict_lst(dict, pos_pion):
         pass
 
     return lst_case_possible
-
 
 
 def depl_pion_bas_gauche(pos_pion_select):
