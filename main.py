@@ -244,14 +244,21 @@ class App:
                     self.widget.lst_pos_pn,
                     self.widget.lst_pos_pb,
                 )
-                self.lst_case_possible = sol.lst_depl
+
+                lst_depl = sol.lst_depl
+                lst_saut = convert_dict_lst(
+                    sol.dict_saut,
+                    self.pos_pion_select,
+                )
+                lst_other = convert_dict_lst(
+                    sol.dict_other,
+                    self.pos_pion_select,
+                )
                 self.lst_pn_sup = sol.lst_pn_sup
                 self.lst_pb_sup = sol.lst_pb_sup
 
-                # print(f"lst_case_possible : {self.lst_case_possible}")
-                print(f"lst_pn_sup : {self.lst_pn_sup}")
-                print(f"lst_pb_sup : {self.lst_pb_sup}")
-                #
+                self.lst_case_possible = lst_depl + lst_saut + lst_other
+
                 self.widget.color_case_possible(self.lst_case_possible)
 
             else:
