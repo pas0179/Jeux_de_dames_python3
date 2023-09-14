@@ -1,9 +1,8 @@
-# Fonction pour trouver les cases noirs vides
-
-# au début de la partie
+"""Fichier des fonctions pour les class du jeu de dames"""
 
 
 def ident_pion_noir_blanc(id_pion):
+    """Renvoie la couleur du pion"""
     pion = ""
     if 100 < id_pion < 121:
         pion = "noir"
@@ -16,11 +15,12 @@ def ident_pion_noir_blanc(id_pion):
 
 
 def convert_coord(x, y, lst_case_noir):
+    """Convertit et renvoie les coordonnées du pion"""
     coord = (0, 0, 0, 0)
 
-    for el in lst_case_noir:
-        if el[0] < x < el[2] and el[1] < y < el[3]:
-            coord = (el[0], el[1], el[0] + 60, el[1] + 60)
+    for element in lst_case_noir:
+        if element[0] < x < element[2] and element[1] < y < element[3]:
+            coord = (element[0], element[1], element[0] + 60, element[1] + 60)
         else:
             pass
 
@@ -28,17 +28,20 @@ def convert_coord(x, y, lst_case_noir):
 
 
 def convert_dict_lst(dict_saut, pos_pion):
+    """Convertit un dictionnaire et renvoie une liste"""
     lst_case_possible = []
 
     if len(dict_saut) > 0:
         for val in dict_saut.values():
-            for el in val:
-                lst_case_possible.append(el)
+            for element in val:
+                lst_case_possible.append(element)
 
         # Nettoyage de la position de départ
         lst_temp = []
 
-        lst_temp = [el for el in lst_case_possible if el != pos_pion]
+        lst_temp = [
+            element for element in lst_case_possible if element != pos_pion
+        ]
 
         lst_case_possible = lst_temp
 
@@ -49,7 +52,7 @@ def convert_dict_lst(dict_saut, pos_pion):
 
 
 def depl_pion_bas_gauche(pos_pion_select):
-    # Position du pion selectionné
+    """calcul et revoie la nouvelle position du pion si c'est possible"""
     pos_x, pos_y = pos_pion_select[0], pos_pion_select[1]
 
     # Valeur de déplacement d'un pion vers le bas
@@ -64,7 +67,7 @@ def depl_pion_bas_gauche(pos_pion_select):
 
 
 def depl_pion_bas_droit(pos_pion_select):
-    # Position du pion selectionné
+    """calcul et revoie la nouvelle position du pion si c'est possible"""
     pos_x, pos_y = pos_pion_select[0], pos_pion_select[1]
 
     # Valeur de déplacement d'un pion vers le bas
@@ -79,7 +82,7 @@ def depl_pion_bas_droit(pos_pion_select):
 
 
 def depl_pion_haut_gauche(pos_pion_select):
-    # Position du pion selectionné
+    """calcul et revoie la nouvelle position du pion si c'est possible"""
     pos_x, pos_y = pos_pion_select[0], pos_pion_select[1]
 
     # Valeur de déplacement d'un pion vers le haut
@@ -94,7 +97,7 @@ def depl_pion_haut_gauche(pos_pion_select):
 
 
 def depl_pion_haut_droit(pos_pion_select):
-    # Position du pion selectionné
+    """calcul et revoie la nouvelle position du pion si c'est possible"""
     pos_x, pos_y = pos_pion_select[0], pos_pion_select[1]
 
     # Valeur de déplacement d'un pion vers le haut
@@ -109,17 +112,17 @@ def depl_pion_haut_droit(pos_pion_select):
 
 
 def saut_bas_g(pion_select, color_pion, lst_case_vide, pos_pn, pos_pb):
+    """Calcul et renvoie la nouvelle position d'un pion pour un saut
+    si c'est possible"""
     saut = ()
     pn_sup, pb_sup = (), ()
     new_pos = ()
 
-    # color_pion = ident_pion_noir_blanc(id)
-
     depl_bg = depl_pion_bas_gauche(pion_select)
 
     if color_pion == "noir":
-        for el in pos_pb:
-            if el[0] == depl_bg[0] and el[1] == depl_bg[1]:
+        for pos in pos_pb:
+            if pos[0] == depl_bg[0] and pos[1] == depl_bg[1]:
                 new_pos = depl_pion_bas_gauche(depl_bg)
             if new_pos in lst_case_vide:
                 saut = new_pos
@@ -128,8 +131,8 @@ def saut_bas_g(pion_select, color_pion, lst_case_vide, pos_pn, pos_pb):
                 pass
 
     elif color_pion == "blanc":
-        for el in pos_pn:
-            if el[0] == depl_bg[0] and el[1] == depl_bg[1]:
+        for pos in pos_pn:
+            if pos[0] == depl_bg[0] and pos[1] == depl_bg[1]:
                 new_pos = depl_pion_bas_gauche(depl_bg)
                 if new_pos in lst_case_vide:
                     saut = new_pos
@@ -143,17 +146,16 @@ def saut_bas_g(pion_select, color_pion, lst_case_vide, pos_pn, pos_pb):
 
 
 def saut_bas_d(pion_select, color_pion, lst_case_vide, pos_pn, pos_pb):
+    """Calcul et renvoie la nouvelle position d'un pion pour un saut"""
     saut = ()
     pn_sup, pb_sup = (), ()
     new_pos = ()
 
-    # color_pion = ident_pion_noir_blanc(id)
-
     depl_bd = depl_pion_bas_droit(pion_select)
 
     if color_pion == "noir":
-        for el in pos_pb:
-            if el[0] == depl_bd[0] and el[1] == depl_bd[1]:
+        for pos in pos_pb:
+            if pos[0] == depl_bd[0] and pos[1] == depl_bd[1]:
                 new_pos = depl_pion_bas_droit(depl_bd)
             if new_pos in lst_case_vide:
                 saut = new_pos
@@ -161,8 +163,8 @@ def saut_bas_d(pion_select, color_pion, lst_case_vide, pos_pn, pos_pb):
             else:
                 pass
     elif color_pion == "blanc":
-        for el in pos_pn:
-            if el[0] == depl_bd[0] and el[1] == depl_bd[1]:
+        for pos in pos_pn:
+            if pos[0] == depl_bd[0] and pos[1] == depl_bd[1]:
                 new_pos = depl_pion_bas_droit(depl_bd)
             if new_pos in lst_case_vide:
                 saut = new_pos
@@ -176,17 +178,16 @@ def saut_bas_d(pion_select, color_pion, lst_case_vide, pos_pn, pos_pb):
 
 
 def saut_haut_g(pion_select, color_pion, lst_case_vide, pos_pn, pos_pb):
+    """Calcul et renvoie la nouvelle position d'un pion pour un saut"""
     saut = ()
     pn_sup, pb_sup = (), ()
     new_pos = ()
 
-    # color_pion = ident_pion_noir_blanc(id)
-
     depl_hg = depl_pion_haut_gauche(pion_select)
 
     if color_pion == "noir":
-        for el in pos_pb:
-            if el[0] == depl_hg[0] and el[1] == depl_hg[1]:
+        for pos in pos_pb:
+            if pos[0] == depl_hg[0] and pos[1] == depl_hg[1]:
                 new_pos = depl_pion_haut_gauche(depl_hg)
             if new_pos in lst_case_vide:
                 saut = new_pos
@@ -195,8 +196,8 @@ def saut_haut_g(pion_select, color_pion, lst_case_vide, pos_pn, pos_pb):
                 pass
 
     elif color_pion == "blanc":
-        for el in pos_pn:
-            if el[0] == depl_hg[0] and el[1] == depl_hg[1]:
+        for pos in pos_pn:
+            if pos[0] == depl_hg[0] and pos[1] == depl_hg[1]:
                 new_pos = depl_pion_haut_gauche(depl_hg)
                 if new_pos in lst_case_vide:
                     saut = new_pos
@@ -210,17 +211,16 @@ def saut_haut_g(pion_select, color_pion, lst_case_vide, pos_pn, pos_pb):
 
 
 def saut_haut_d(pion_select, color_pion, lst_case_vide, pos_pn, pos_pb):
+    """Calcul et renvoie la nouvelle position d'un pion pour un saut"""
     saut = ()
     pn_sup, pb_sup = (), ()
     new_pos = ()
 
-    # color_pion = ident_pion_noir_blanc(id)
-
     depl_hd = depl_pion_haut_droit(pion_select)
 
     if color_pion == "noir":
-        for el in pos_pb:
-            if el[0] == depl_hd[0] and el[1] == depl_hd[1]:
+        for pos in pos_pb:
+            if pos[0] == depl_hd[0] and pos[1] == depl_hd[1]:
                 new_pos = depl_pion_haut_droit(depl_hd)
             if new_pos in lst_case_vide:
                 saut = new_pos
@@ -229,8 +229,8 @@ def saut_haut_d(pion_select, color_pion, lst_case_vide, pos_pn, pos_pb):
                 pass
 
     elif color_pion == "blanc":
-        for el in pos_pn:
-            if el[0] == depl_hd[0] and el[1] == depl_hd[1]:
+        for pos in pos_pn:
+            if pos[0] == depl_hd[0] and pos[1] == depl_hd[1]:
                 new_pos = depl_pion_haut_droit(depl_hd)
                 if new_pos in lst_case_vide:
                     saut = new_pos

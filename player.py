@@ -3,11 +3,15 @@ Class player pour savoir qui doit jouer
 
 """
 
+
 class Player:
+    """class player pour savoir qui doit jouer"""
     def __init__(self):
+        """initialisation des variables de class"""
         self.lst_depl_pion = []
 
     def select_player(self, id, color_pion, lst_depl_pion, lst_pn_sup, lst_pb_sup):
+        """fonction qui permet de savoir qui doit jouer"""
         self.lst_depl_pion = lst_depl_pion
 
         player = ""

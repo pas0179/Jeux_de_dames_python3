@@ -12,14 +12,17 @@ from fonctions import (
 
 
 class Sauts:
+    """Class pour gerer les sauts possibles d'un pion"""
     def __init__(self, pos_pion, color_pion, lst_case_vide, pos_pn, pos_pb):
 
+        """Initialisation des attributs"""
         self.pos_pion = pos_pion
         self.color_pion = color_pion
         self.lst_case_vide = lst_case_vide
         self.pos_pn = pos_pn
         self.pos_pb = pos_pb
-
+        
+        """ Initialisation des variables pour les methodes """
         self.dict_saut = {}
         self.lst_pn_sup = []
         self.lst_pb_sup = []
@@ -28,6 +31,7 @@ class Sauts:
 
         self.sol = "Solution_"
 
+        """Initialisation de la méthode sauts"""
         self.sauts()
 
     """
@@ -39,6 +43,7 @@ class Sauts:
     def saut_possible(
         self, pos_pion, oldpos, color_pion, lst_case_vide, pos_pn, pos_pb
     ):
+        """Créer et retourne un dictionnaire des sauts possibles"""
         dict_saut = {}
         lst_pn_sup = []
         lst_pb_sup = []
@@ -98,11 +103,8 @@ class Sauts:
 
         return dict_saut, lst_pn_sup, lst_pb_sup
 
-    """
-        Trouver la derniere position dans un dictionnaire
-    """
-
     def find_last_pos_dict(self, dict_temp):
+        """Trouver la derniere position dans un dictionnaire"""
         lst_last_pos = []
 
         # Récup des dernieres positions dans le dictionnaire
@@ -119,11 +121,8 @@ class Sauts:
 
         return lst_last_pos
 
-    """
-        MAJ du dictionnaire pour N° des solutions
-    """
-
     def maj_nb_solutions_dict(self, dict_1):
+        """MAJ du dictionnaire pour N° des solutions"""
         dict_temp = {}
         compteur = 1
 
@@ -133,11 +132,8 @@ class Sauts:
 
         return dict_temp
 
-    """
-        Fusion de plusieurs dictionnaire
-    """
-
     def fusion_dict(self, dict_1, dict_2):
+        """Fusion de 2 dictionnaires"""
         # Dict1 : self.dict_saut , dict2 : dict_saut
         lg1 = len(dict_1)
         lg2 = len(dict_2)
@@ -148,9 +144,9 @@ class Sauts:
 
         if lg2 > 0 and lg2 > lg1:
             for key, val in dict_2.items():
-                for v in dict_1.values():
-                    if val[0] == v[-1] and val[1] != v[-2]:
-                        dict_2[key].insert(0, v[0])
+                for val2 in dict_1.values():
+                    if val[0] == val2[-1] and val[1] != val2[-2]:
+                        dict_2[key].insert(0, val2[0])
                     else:
                         continue
 
@@ -158,9 +154,9 @@ class Sauts:
 
         elif lg1 >= lg2:
             for key, val in dict_1.items():
-                for v in dict_2.values():
-                    if val[-1] == v[0] and val[-2] != v[1]:
-                        dict_1[key].append(v[-1])
+                for val2 in dict_2.values():
+                    if val[-1] == val2[0] and val[-2] != val2[1]:
+                        dict_1[key].append(val2[-1])
                     else:
                         continue
 
@@ -172,11 +168,9 @@ class Sauts:
 
         return dict_fusion
 
-    """
-        Methode pour le saut de pion noir ou blanc
-    """
-
     def sauts(self):
+        """Méthode pour créer et retourner un dictionnaire des sauts
+        possibles"""
         dict_temp = {}
         dict_saut = {}
         lst_last_pos = []
@@ -185,8 +179,6 @@ class Sauts:
 
         # Initialisation de la liste des dernières positions
         lst_last_pos.append(((), self.pos_pion))
-
-        ################################################################
 
         while len(lst_last_pos) > 0:
             dict_saut = {}

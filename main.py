@@ -17,16 +17,18 @@ from widget import Widget
 
 
 class App:
+    """Class principale pour le jeu de dames"""
     def __init__(self, title):
+        """Initialisation des attributs"""
         self.fen = tk.Tk()
 
+        """Configuration de la fenêtre"""
         self.fen.title(title)
         self.fen.geometry("750x610")
         self.fen.minsize(750, 610)
         self.fen.maxsize(750, 610)
         self.fen.config(bg="black")
 
-        # Listes pour le programme
         self.lst_case_vide = []
         self.lst_tour = []
 
@@ -201,8 +203,7 @@ class App:
                     self.dict_depl, self.pos_pion_select
                 )
 
-                self.widget.color_case_possible(self.lst_case_possible)
-
+                # self.widget.color_case_possible(self.lst_case_possible)
             else:
                 messagebox.showinfo(
                     "Erreur", "Ce nest pas a vous de jouer !!!"
@@ -258,9 +259,7 @@ class App:
                 self.lst_pb_sup = sol.lst_pb_sup
 
                 self.lst_case_possible = lst_depl + lst_saut + lst_other
-
-                self.widget.color_case_possible(self.lst_case_possible)
-
+                # self.widget.color_case_possible(self.lst_case_possible)
             else:
                 messagebox.showinfo(
                     "Erreur", "Ce n'est pas a vous de jouer !!!"
